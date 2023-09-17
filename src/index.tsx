@@ -1,16 +1,25 @@
-import React from "react";
+import React, {createContext} from "react";
 import ReactDOM from "react-dom/client";
 import "./index.scss";
 import App from "./App";
 import {BrowserRouter} from 'react-router-dom'
+import AppStore from "./Store/AppStore";
+import ContextInterface from "./Interfaces/ContextInterface";
+
+const appStore = new AppStore();
+export const Context = createContext<ContextInterface>({
+    appStore
+});
 
 const root = ReactDOM.createRoot(
-  document.getElementById("root") as HTMLElement
+    document.getElementById("root") as HTMLElement
 );
 root.render(
-  <BrowserRouter>
-    <App />
-  </BrowserRouter>
+    <Context.Provider value={{appStore}}>
+        <BrowserRouter>
+            <App/>
+        </BrowserRouter>
+    </Context.Provider>
 );
 
 // If you want to start measuring performance in your app, pass a function

@@ -1,20 +1,39 @@
-import {useState} from "react";
+import {useContext, useState} from "react";
 import "./Main.scss";
-import {Container, Button} from "react-bootstrap";
+import {Container, Button, Badge} from "react-bootstrap";
 import axios from "axios";
+import {Context} from "../../index";
+import {observer} from "mobx-react";
 
 interface MainInterface {
 }
 
 const Main = (props: MainInterface) => {
     const [details, setDetails] = useState(false);
-    const apiAuthUrl = "http://localhost:8000/api/v1/auth/";
-    // const apiAuthUrl = "https://fakestoreapi.com/products";
+    const {appStore} = useContext(Context);
+    const [apiResponse, setApiResponse] = useState("");
 
     const apiGetTest = async () => {
-        const response = await axios.get(apiAuthUrl);
+        const url = appStore.backEnd.apiUrl + appStore.backEnd.authApiRootPoint;
+        const response = await axios.get(url);
+
+        if (!!response && response.status === 200 && !!response.data) {
+            setApiResponse(response.data);
+        }
+
         console.log(response);
     }
+
+    const generateToken = (): void => {
+        appStore.setToken(randomString(30));
+    }
+
+    const randomString = (i: number): string => {
+        let rnd = '';
+        while (rnd.length < i)
+            rnd += Math.random().toString(36).substring(2);
+        return rnd.substring(0, i);
+    };
 
     return (
         <Container className="Main p-0s">
@@ -42,8 +61,16 @@ const Main = (props: MainInterface) => {
                 onClick={() => apiGetTest()}
                 className={"m-1"}
             >Api Get Test</Button>
+            {!!apiResponse && <div>{apiResponse}</div>}
+
+
+            <Container fluid className={"token mt-3 p-0"}>
+                <div className={"w-100 m-1"}><Badge className={"Badge"} bg={"secondary"}>{appStore.userData.token}</Badge></div>
+                <Button variant={"dark"} className={"m-1"} onClick={() => generateToken()}>TokenGen</Button>
+            </Container>
         </Container>
+
     );
 };
 
-export default Main;
+export default observer(Main);
