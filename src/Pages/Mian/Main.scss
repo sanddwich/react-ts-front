@@ -1,0 +1,7 @@
+.Main {
+  .MainButton {
+    .btn:focus, .btn:active {
+      box-shadow: none !important;
+    }
+  }
+}
