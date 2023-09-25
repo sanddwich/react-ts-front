@@ -1,3 +1,9 @@
 .MainHeader {
-    
+    .MainHeader__icon {
+      margin-left: 20px;
+
+      :hover {
+        cursor: pointer;
+      }
+    }
 }

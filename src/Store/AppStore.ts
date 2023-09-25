@@ -2,10 +2,13 @@ import {makeAutoObservable} from "mobx";
 import UserDataInterface from "../Interfaces/UserDataInterface";
 import BackendInterface from "../Interfaces/BackendInterface";
 import BackEndData from "../DefaultData/BackEndData";
+import LinkListInterface from "../Interfaces/LinkListInterface";
+import LinkListData from "../DefaultData/LinkListData";
 
 export default class AppStore {
     userData = {} as UserDataInterface;
     backEnd = BackEndData as BackendInterface;
+    routes = LinkListData as LinkListInterface;
 
     constructor() {
         this.setTokenFromLocalStorage();

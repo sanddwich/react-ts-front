@@ -1,4 +1,4 @@
-import React, {FC, useContext, useState} from 'react'
+import React, {useContext, useState} from 'react'
 import "./Second.scss"
 import {Context} from "../../index";
 import axios from "axios";
@@ -36,8 +36,8 @@ const Second = (props: SecondInterface) => {
     };
 
     return (
-        <Container className="Main p-0s">
-            <h1>Main</h1>
+        <Container className="Second p-0s">
+            <h1>Second</h1>
             <Button
                 variant={details ? "info" : "warning"}
                 onClick={() => setDetails(!details)}
