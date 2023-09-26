@@ -1,9 +1,34 @@
 .MainHeader {
-    .MainHeader__icon {
-      margin-left: 20px;
+  .MainHeader__icon {
+    margin-left: 20px;
 
-      :hover {
-        cursor: pointer;
-      }
+    :hover {
+      cursor: pointer;
     }
+  }
+
+  .MainHeader__navbar {
+    background-color: #adb5bd;
+  }
+
+  .MainHeader__badge {
+    margin-right: 10px;
+    color: #dee2e6;
+    background-color: #495057 !important;
+  }
+}
+
+#customCanvas{
+  background-color: #adb5bd;
+
+  .customCanvas__header {
+    background-color: #495057;
+    color: #dee2e6;
+    box-shadow: 0 3px 5px #495057;
+    overflow-x: hidden !important;
+
+    .btn-close {
+      background-color: #dee2e6;
+    }
+  }
 }

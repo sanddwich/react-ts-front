@@ -1,0 +1,28 @@
+.CustomDropdownMenu {
+  .CustomDropdownMenu__toggle {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .CustomDropdownMenu__menu {
+    width: 100%;
+    background-color: #dee2e6;
+    padding: 5px;
+  }
+
+  a {
+    text-decoration: none;
+    color: #495057;
+    font-weight: bold;
+
+    :hover {
+      margin-left: 2px;
+    }
+
+    :active {
+      background-color: #adb5bd;
+    }
+  }
+}

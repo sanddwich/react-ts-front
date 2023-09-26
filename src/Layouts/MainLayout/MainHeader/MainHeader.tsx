@@ -3,7 +3,7 @@ import "./MainHeader.scss";
 import {Icon} from "../../../Components/Icon";
 import {useContext, useState} from "react";
 import {Context} from "../../../index";
-import {NavLink} from "react-router-dom";
+import CustomDropdownMenu from "../../../Components/CustomDropdownMenu/CustomDropdownMenu";
 
 interface MainHeaderInterface {
 }
@@ -12,10 +12,14 @@ const MainHeader = (props: MainHeaderInterface) => {
     const [ddMenu, setDdMenu] = useState<boolean>(false);
     const {appStore} = useContext(Context);
 
+    const linkClickHandler = ():void => {
+        setDdMenu(false);
+    }
+
     return (
         <Container fluid className="MainHeader p-0">
             <Navbar
-                className={`bg-body-tertiary justify-content-between align-items-center`}
+                className={`MainHeader__navbar justify-content-between align-items-center`}
             >
                 <Icon
                     iconName={"Stack"}
@@ -24,32 +28,26 @@ const MainHeader = (props: MainHeaderInterface) => {
                     className={"MainHeader__icon"}
                     onClick={() => setDdMenu(true)}
                 />
-                <h1>
-                    <Badge
-                        bg="secondary"
-                        className={"m-3"}
-                    >AppHeader</Badge>
+                <h1 className={"m-0"}>
+                    <Badge bg={'none'} className={"MainHeader__badge"}>AppHeader</Badge>
                 </h1>
             </Navbar>
 
-            <Offcanvas show={ddMenu} onHide={() => setDdMenu(false)} {...props}>
-                <Offcanvas.Header closeButton>
-                    <Offcanvas.Title>Менюшечко</Offcanvas.Title>
-                </Offcanvas.Header>
-                <Offcanvas.Body>
+            <Offcanvas
+                show={ddMenu}
+                onHide={() => setDdMenu(false)} {...props}
+                id={`customCanvas`}
 
-                    <Dropdown>
-                        <Container fluid>
-                            <Dropdown.Toggle>Пользователь</Dropdown.Toggle>
-                        </Container>
-                        <Dropdown.Menu>
-                            {appStore.routes.userLinks.urls.map((value, index) =>
-                                <NavLink to={appStore.routes.userLinks.node + value.url}>
-                                    <Dropdown.Item key={index}>{value.title}</Dropdown.Item>
-                                </NavLink>
-                            )}
-                        </Dropdown.Menu>
-                    </Dropdown>
+            >
+                <Offcanvas.Header className={`customCanvas__header`} closeButton>
+                    <Offcanvas.Title className={`customCanvas__title`}>Менюшечко</Offcanvas.Title>
+                </Offcanvas.Header>
+                <Offcanvas.Body className={`customCanvas__body`}>
+                    <CustomDropdownMenu
+                        menu={appStore.routes.userLinks}
+                        name={'Пользовательские'}
+                        onLinkClick={() => linkClickHandler()}
+                    />
                 </Offcanvas.Body>
             </Offcanvas>
         </Container>

@@ -1,0 +1,41 @@
+.AuthForm {
+  width: 40%;
+  padding: 15px;
+  border-radius: 3px;
+  background-color: #495057;
+  color: #fff;
+  box-shadow: 0 0 10px #495057;;
+
+  .AuthForm__formName {
+    font-weight: bold;
+    font-size: 20px;
+    padding-bottom: 10px;
+  }
+
+  .AuthForm__form {
+    padding-top: 10px;
+  }
+
+  .AuthForm__group {
+    padding-bottom: 10px;
+  }
+
+  .AuthForm__muted {
+    color: #d78dae !important;
+  }
+
+  .AuthForm__buttonCont {
+    padding-top: 30px;
+    padding-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: right;
+  }
+
+  .AuthForm__button {
+    padding-left: 50px;
+    padding-right: 50px;
+  }
+
+
+}
