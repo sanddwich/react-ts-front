@@ -5,9 +5,11 @@ import BackEndData from "../DefaultData/BackEndData";
 import LinkListInterface from "../Interfaces/LinkListInterface";
 import LinkListData from "../DefaultData/LinkListData";
 import APIService from "../Services/APIService";
+import AuthResponseInterface from "../Interfaces/AuthResponseInterface";
 
 export default class AppStore {
     userData = {} as UserDataInterface;
+    token: string = '';
     backEnd = BackEndData as BackendInterface;
     routes = LinkListData as LinkListInterface;
     apiService: APIService = new APIService();
@@ -19,11 +21,11 @@ export default class AppStore {
 
     setToken = (val: string):void => {
         localStorage.setItem("token", val);
-        this.userData.token = val;
+        this.token = val;
     }
 
-    setUserData = (userData: UserDataInterface): void => {
-        this.userData = userData;
+    setUserData = (user: UserDataInterface): void => {
+        this.userData = user;
     }
 
     setTokenFromLocalStorage = (): void => {

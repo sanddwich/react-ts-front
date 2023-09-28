@@ -1,6 +1,7 @@
 export default interface UserDataInterface {
+    name: string
     username: string
+    surname: string
     email: string
-    token: string
-    isAuth: boolean
+    privilegeList: string[]
 }

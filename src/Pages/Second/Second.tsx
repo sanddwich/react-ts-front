@@ -66,7 +66,7 @@ const Second = (props: SecondInterface) => {
 
             <Container fluid className={"token mt-3 p-0"}>
                 <div className={"w-100 m-1"}><Badge className={"Badge"}
-                                                    bg={"secondary"}>{appStore.userData.token}</Badge></div>
+                                                    bg={"secondary"}>{appStore.token}</Badge></div>
                 <Button variant={"dark"} className={"m-1"} onClick={() => generateToken()}>TokenGen</Button>
             </Container>
         </Container>
