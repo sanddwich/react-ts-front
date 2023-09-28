@@ -4,6 +4,7 @@ import Auth from "../Pages/Auth/Auth";
 import MainLayout from "../Layouts/MainLayout/MainLayout";
 import Default from "../Pages/Default/Default";
 import Second from "../Pages/Second/Second";
+import TestPage from "../Pages/TestPage/TestPage";
 
 const adminNode = '/admin/'
 const superUserNode = '/superuser/'
@@ -61,6 +62,11 @@ const LinkListData: LinkListInterface = {
                 title: 'Auth',
                 url: 'auth',
                 component: <Auth/>
+            },
+            {
+                title: 'Test',
+                url: 'test',
+                component: <TestPage/>
             },
             {
                 title: 'Default',

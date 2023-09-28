@@ -1,7 +1,4 @@
 import {Routes, Route} from "react-router-dom";
-import MainLayout from "../Layouts/MainLayout/MainLayout";
-import Main from '../Pages/Mian/Main';
-import Second from "../Pages/Second/Second";
 import {Context} from "../index";
 import {useContext} from "react";
 import {observer} from "mobx-react";
