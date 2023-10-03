@@ -10,6 +10,7 @@ import AuthResponseInterface from "../Interfaces/AuthResponseInterface";
 export default class AppStore {
     userData = {} as UserDataInterface;
     token: string = '';
+    isAuth: boolean = false;
     backEnd = BackEndData as BackendInterface;
     routes = LinkListData as LinkListInterface;
     apiService: APIService = new APIService();
@@ -26,6 +27,10 @@ export default class AppStore {
 
     setUserData = (user: UserDataInterface): void => {
         this.userData = user;
+    }
+
+    setIsAuth = (val: boolean):void => {
+        this.isAuth = val;
     }
 
     setTokenFromLocalStorage = (): void => {

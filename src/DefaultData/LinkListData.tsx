@@ -5,6 +5,7 @@ import MainLayout from "../Layouts/MainLayout/MainLayout";
 import Default from "../Pages/Default/Default";
 import Second from "../Pages/Second/Second";
 import TestPage from "../Pages/TestPage/TestPage";
+import AdminMain from "../Pages/AdminMain/AdminMain";
 
 const adminNode = '/admin/'
 const superUserNode = '/superuser/'
@@ -15,10 +16,12 @@ const LinkListData: LinkListInterface = {
         node: adminNode,
         layout: <MainLayout />,
         urls: [
-            // {
-            //     title: 'Admin main',
-            //     url: '/admin/main',
-            // },
+            {
+                title: 'AdminMain',
+                index: true,
+                url: 'main',
+                component: <AdminMain/>
+            },
             // {
             //     title: 'Admin users',
             //     url: '/admin/users',

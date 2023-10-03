@@ -47,6 +47,12 @@ const MainHeader = (props: MainHeaderInterface) => {
                         menu={appStore.routes.userLinks}
                         name={'Пользовательские'}
                         onLinkClick={() => linkClickHandler()}
+
+                    />
+                    <CustomDropdownMenu
+                        menu={appStore.routes.adminLinks}
+                        name={'Авторизованные'}
+                        onLinkClick={() => linkClickHandler()}
                     />
                 </Offcanvas.Body>
             </Offcanvas>

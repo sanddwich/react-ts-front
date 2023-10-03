@@ -29,8 +29,8 @@ const TestPage = (props: TestPageInterface) => {
 
     const authenticate = async ():Promise<any> => {
         const authRequest :AuthRequestInterface = {
-          username: 'admin',
-          password: 'admin'
+          username: 'user',
+          password: 'user'
         };
 
         const res = await appStore.apiService.authenticate(authRequest);
