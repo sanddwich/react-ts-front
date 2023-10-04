@@ -4,6 +4,7 @@ import {Icon} from "../../../Components/Icon";
 import {useContext, useState} from "react";
 import {Context} from "../../../index";
 import CustomDropdownMenu from "../../../Components/CustomDropdownMenu/CustomDropdownMenu";
+import {observer} from "mobx-react";
 
 interface MainHeaderInterface {
 }
@@ -37,27 +38,35 @@ const MainHeader = (props: MainHeaderInterface) => {
                 show={ddMenu}
                 onHide={() => setDdMenu(false)} {...props}
                 id={`customCanvas`}
-
+                key={appStore.linksVersion}
             >
                 <Offcanvas.Header className={`customCanvas__header`} closeButton>
                     <Offcanvas.Title className={`customCanvas__title`}>Менюшечко</Offcanvas.Title>
                 </Offcanvas.Header>
                 <Offcanvas.Body className={`customCanvas__body`}>
-                    <CustomDropdownMenu
-                        menu={appStore.routes.userLinks}
-                        name={'Пользовательские'}
-                        onLinkClick={() => linkClickHandler()}
+                    {appStore.clientLinks.map(route =>
+                        <CustomDropdownMenu
+                            key={route.authType}
+                            menu={route}
+                            name={route.group}
+                            onLinkClick={() => linkClickHandler()}
+                        />
+                    )}
+                    {/*<CustomDropdownMenu*/}
+                    {/*    menu={appStore.routes.userLinks}*/}
+                    {/*    name={'Пользовательские'}*/}
+                    {/*    onLinkClick={() => linkClickHandler()}*/}
 
-                    />
-                    <CustomDropdownMenu
-                        menu={appStore.routes.adminLinks}
-                        name={'Авторизованные'}
-                        onLinkClick={() => linkClickHandler()}
-                    />
+                    {/*/>*/}
+                    {/*<CustomDropdownMenu*/}
+                    {/*    menu={appStore.routes.adminLinks}*/}
+                    {/*    name={'Авторизованные'}*/}
+                    {/*    onLinkClick={() => linkClickHandler()}*/}
+                    {/*/>*/}
                 </Offcanvas.Body>
             </Offcanvas>
         </Container>
     );
 };
 
-export default MainHeader;
+export default observer(MainHeader);

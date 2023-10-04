@@ -1,20 +1,38 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import './AuthForm.scss';
 import {Button, Container, Form} from "react-bootstrap";
 import AuthRequestInterface from "../../Interfaces/AuthRequestInterface";
 import {useForm} from "react-hook-form";
+import {useNavigate, } from "react-router-dom"
+import {Context} from "../../index";
+import Loader from "../Loader/Loader";
+import {AxiosResponse} from "axios";
 
 interface AuthFormInterface {
     buttonClickHandler: (authData: AuthRequestInterface) => void
 }
 
 const AuthForm = (props: AuthFormInterface) => {
+    const [loading, setLoading] = useState<boolean>(false);
+    const {appStore} = useContext(Context);
+    const navigate = useNavigate();
+
     const {
         register,
         handleSubmit,
         resetField,
         formState: {errors},
     } = useForm<AuthRequestInterface>({})
+
+    const authorize = async (authData: AuthRequestInterface): Promise<boolean> => {
+        const res = await appStore.apiService.authenticate(authData);
+        if (res.status == 200) {
+            appStore.authDefaultSettings(res.data.token);
+            return true;
+        }
+
+        return false;
+    }
 
     const minLength: number = 3;
 
@@ -23,8 +41,12 @@ const AuthForm = (props: AuthFormInterface) => {
         resetField('password')
     }
 
-    const buttonClickHandler = (data: AuthRequestInterface): void => {
-        console.log(data)
+    const buttonClickHandler = async (data: AuthRequestInterface):Promise<any> => {
+        setLoading(true);
+        const res = await authorize(data);
+        if (!!res) navigate(appStore.routes.adminLinks.node);
+        resetFields();
+        setLoading(false);
     }
 
     return (
@@ -64,7 +86,7 @@ const AuthForm = (props: AuthFormInterface) => {
                         type="password"
                         placeholder="Пароль"
                         {...register('password', {
-                            required: { value: true, message: 'Обязательное поле для заполнения' },
+                            required: {value: true, message: 'Обязательное поле для заполнения'},
                             minLength: {
                                 value: minLength,
                                 message: 'Недостаточное кол-во символов. Минимальное: ' + minLength,
@@ -81,14 +103,16 @@ const AuthForm = (props: AuthFormInterface) => {
                     )}
                 </Form.Group>
                 <Form.Group className={`AuthForm__buttonCont`} controlId={`formBasicButton`}>
-                    <Button
-                        className={`AuthForm__button`}
-                        variant="light"
-                        type="button"
-                        onClick={handleSubmit((data) => buttonClickHandler(data))}
-                    >
-                        Вход
-                    </Button>
+                    {loading ? <Loader/> : (
+                        <Button
+                            className={`AuthForm__button`}
+                            variant="light"
+                            type="button"
+                            onClick={handleSubmit((data) => buttonClickHandler(data))}
+                        >
+                            Вход
+                        </Button>
+                    )}
                 </Form.Group>
             </Form>
         </Container>

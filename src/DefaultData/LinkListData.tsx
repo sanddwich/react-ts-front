@@ -13,11 +13,13 @@ const userNode = '/'
 
 const LinkListData: LinkListInterface = {
     adminLinks: {
+        group: 'Авторизованные',
         node: adminNode,
         layout: <MainLayout />,
+        authType: "authenticated",
         urls: [
             {
-                title: 'AdminMain',
+                title: 'Административная панель Главная',
                 index: true,
                 url: 'main',
                 component: <AdminMain/>
@@ -37,8 +39,10 @@ const LinkListData: LinkListInterface = {
         ],
     },
     superUserLinks: {
+        group: 'Высшие привилегии',
         node: superUserNode,
         layout: <MainLayout />,
+        authType: "superuser",
         urls: [
             // {
             //     url: '/superuser/main',
@@ -47,32 +51,34 @@ const LinkListData: LinkListInterface = {
         ],
     },
     userLinks: {
+        group: 'Пользовательские',
         node: userNode,
         layout: <MainLayout />,
+        authType: "user",
         urls: [
             {
-                title: 'Main',
+                title: 'Главная',
                 index: true,
                 url: 'main',
                 component: <Main/>
             },
             {
-                title: 'Second',
+                title: 'Дополнительно',
                 url: 'second',
                 component: <Second/>
             },
             {
-                title: 'Auth',
+                title: 'Авторизация',
                 url: 'auth',
                 component: <Auth/>
             },
             {
-                title: 'Test',
+                title: 'Тест',
                 url: 'test',
                 component: <TestPage/>
             },
             {
-                title: 'Default',
+                title: 'Страница не найдена',
                 url: '*',
                 component: <Default/>
             },

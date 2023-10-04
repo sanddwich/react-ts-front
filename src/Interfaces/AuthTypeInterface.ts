@@ -1,0 +1,1 @@
+export type AuthTypeInterface = "authenticated" | "user" | "superuser";
