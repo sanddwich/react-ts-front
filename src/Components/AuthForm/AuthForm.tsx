@@ -3,10 +3,9 @@ import './AuthForm.scss';
 import {Button, Container, Form} from "react-bootstrap";
 import AuthRequestInterface from "../../Interfaces/AuthRequestInterface";
 import {useForm} from "react-hook-form";
-import {useNavigate, } from "react-router-dom"
+import {useNavigate} from "react-router-dom"
 import {Context} from "../../index";
 import Loader from "../Loader/Loader";
-import {AxiosResponse} from "axios";
 
 interface AuthFormInterface {
     buttonClickHandler: (authData: AuthRequestInterface) => void

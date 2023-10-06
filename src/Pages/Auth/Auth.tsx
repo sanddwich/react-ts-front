@@ -1,19 +1,20 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import './Auth.scss';
 import {Button, Container, Form} from "react-bootstrap";
 import AuthForm from "../../Components/AuthForm/AuthForm";
 import AuthRequestInterface from "../../Interfaces/AuthRequestInterface";
-import Loader from "../../Components/Loader/Loader";
-import {AxiosResponse} from "axios";
 import {observer} from "mobx-react";
+import ErrorComponent from "../../Components/ErrorComponent/ErrorComponent";
 import {Context} from "../../index";
 
-interface AuthInterface {}
+interface AuthInterface {
+}
 
 const Auth = (props: AuthInterface) => {
+    const {appStore} = useContext(Context);
 
-    const buttonClickHandler = (authData: AuthRequestInterface):void => {
-        console.log(authData);
+    const buttonClickHandler = (authData: AuthRequestInterface): void => {
+        // console.log(authData);
     }
 
     return (
@@ -26,4 +27,4 @@ const Auth = (props: AuthInterface) => {
     );
 }
 
-export default Auth;
+export default observer(Auth);

@@ -5,9 +5,7 @@ import BackEndData from "../DefaultData/BackEndData";
 import LinkListInterface from "../Interfaces/LinkListInterface";
 import LinkListData from "../DefaultData/LinkListData";
 import APIService from "../Services/APIService";
-import AuthResponseInterface from "../Interfaces/AuthResponseInterface";
-import {AxiosResponse} from "axios";
-import {AuthTypeInterface} from "../Interfaces/AuthTypeInterface";
+import {AxiosRequestConfig, AxiosResponse} from "axios";
 import NodeInterface from "../Interfaces/NodeInterface";
 
 export default class AppStore {
@@ -60,9 +58,9 @@ export default class AppStore {
     }
 
     authDefaultSettings = (token: string):void => {
-        this.setClientLinks([this.routes.userLinks, this.routes.adminLinks]);
         this.setToken(token);
         this.setIsAuth(true);
+        this.setClientLinks([this.routes.userLinks, this.routes.adminLinks]);
         this.setLinksVersionAndInitializeV1();
     }
 
@@ -87,5 +85,33 @@ export default class AppStore {
 
     setInitialize = (val: boolean):void => {
         this.initialize = val;
+    }
+
+    simpleRequest = async (axiosRequestConfig: AxiosRequestConfig):Promise<AxiosResponse> => {
+        return await this.apiService.request(axiosRequestConfig);
+    }
+
+    authRequest = async (axiosRequestConfig: AxiosRequestConfig):Promise<AxiosResponse> => {
+        const authHeaders = {
+            "Authorization": "Bearer " + this.token,
+            "Content-Type": "application/json",
+        };
+        axiosRequestConfig.headers = {...axiosRequestConfig.headers, ...authHeaders};
+        const res = await this.apiService.request(axiosRequestConfig);
+
+        if (!!res.status && res.status == 404) {
+            if (!!this.isAuth) {
+                const checkToken = await this.apiService.checkToken(this.token);
+                if (!!checkToken.status && checkToken.status == 404) {
+                    this.setDefaultSettings();
+                }
+            }
+        }
+
+        return res;
+    }
+
+    logoutRequest = async (axiosRequestConfig: AxiosRequestConfig):Promise<AxiosResponse> => {
+        return await this.apiService.request(axiosRequestConfig);
     }
 }

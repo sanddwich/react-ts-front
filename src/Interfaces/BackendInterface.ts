@@ -3,4 +3,7 @@ export default interface BackendInterface {
     authApiRootPoint: string
     authenticateUrlPoint: string
     apiCheckTokenUrl: string
+    authApiLogoutUrl: string
+    apiServiceControllerGetExample: string
+    apiServiceControllerPostExample: string
 }

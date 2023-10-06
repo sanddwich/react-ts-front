@@ -6,7 +6,7 @@ import UserDataInterface from "../Interfaces/UserDataInterface";
 export default class APIService {
     private axiosService = axios.create();
 
-    simpleRequest = async (axiosRequestConfig: AxiosRequestConfig):Promise<AxiosResponse> => {
+    request = async (axiosRequestConfig: AxiosRequestConfig):Promise<AxiosResponse> => {
         let res = {} as AxiosResponse;
         await this.axiosService(axiosRequestConfig)
             .then(resp => {res = resp})
@@ -24,8 +24,8 @@ export default class APIService {
         return res;
     }
 
-    checkToken = async (token: string):Promise<any> => {
-        return await this.simpleRequest({
+    checkToken = async (token: string):Promise<AxiosResponse> => {
+        return await this.request({
             url: BackEndData.apiCheckTokenUrl,
             method: "GET",
             headers: {
@@ -36,7 +36,7 @@ export default class APIService {
     }
 
     authenticate = async (authRequest: AuthRequestInterface):Promise<AxiosResponse> => {
-        return await this.simpleRequest({
+        return await this.request({
             url: BackEndData.authenticateUrlPoint,
             method: "POST",
             data: authRequest

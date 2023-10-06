@@ -11,7 +11,7 @@ const TestPage = (props: TestPageInterface) => {
     const {appStore} = useContext(Context)
 
     const request = async (axiosRequestConfig: AxiosRequestConfig):Promise<any> => {
-        const res = await appStore.apiService.simpleRequest(axiosRequestConfig);
+        const res = await appStore.apiService.request(axiosRequestConfig);
         console.log(res);
     }
 
