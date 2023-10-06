@@ -9,6 +9,10 @@ const AdminMain = (props: AdminMainProps) => {
     const [data, setData] = useState({});
     const {appStore} = useContext(Context);
 
+    useEffect(() => {
+        sendRequest();
+    }, []);
+
     const sendRequest = () => {
         appStore.authRequest({
             url: appStore.backEnd.apiServiceControllerGetExample,

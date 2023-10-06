@@ -67,7 +67,7 @@ export default class AppStore {
     setLinksVersionAndInitializeV1 = ():void => {
         this.setLinksVersion(Date.now());
         this.setInitialize(false);
-        console.log(this);
+        // console.log(this);
     }
 
     setLinksVersion = (val: number):void => {
