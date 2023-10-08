@@ -1,10 +1,12 @@
-import {Badge, Container, Dropdown, Navbar, Offcanvas} from "react-bootstrap";
+import {Badge, Button, Container, Dropdown, Navbar, Offcanvas} from "react-bootstrap";
 import "./MainHeader.scss";
 import {Icon} from "../../../Components/Icon";
 import {useContext, useState} from "react";
 import {Context} from "../../../index";
 import CustomDropdownMenu from "../../../Components/CustomDropdownMenu/CustomDropdownMenu";
 import {observer} from "mobx-react";
+import IconButton from "../../../Components/IconButton/IconButton";
+import {useNavigate} from "react-router-dom";
 
 interface MainHeaderInterface {
 }
@@ -12,9 +14,26 @@ interface MainHeaderInterface {
 const MainHeader = (props: MainHeaderInterface) => {
     const [ddMenu, setDdMenu] = useState<boolean>(false);
     const {appStore} = useContext(Context);
+    const navigate  = useNavigate();
 
-    const linkClickHandler = ():void => {
+    const linkClickHandler = (): void => {
         setDdMenu(false);
+    }
+
+    const exitClickHandler = ():void => {
+        appStore.logoutRequest({
+            url: appStore.backEnd.authApiLogoutUrl,
+            method: "POST",
+            data: {
+                token: appStore.token
+            }
+        })
+            .then(res => {
+                navigate('/');
+            })
+            .catch(e => console.warn(e));
+
+
     }
 
     return (
@@ -44,25 +63,26 @@ const MainHeader = (props: MainHeaderInterface) => {
                     <Offcanvas.Title className={`customCanvas__title`}>Менюшечко</Offcanvas.Title>
                 </Offcanvas.Header>
                 <Offcanvas.Body className={`customCanvas__body`}>
-                    {appStore.clientLinks.map(route =>
-                        <CustomDropdownMenu
-                            key={route.authType}
-                            menu={route}
-                            name={route.group}
-                            onLinkClick={() => linkClickHandler()}
-                        />
-                    )}
-                    {/*<CustomDropdownMenu*/}
-                    {/*    menu={appStore.routes.userLinks}*/}
-                    {/*    name={'Пользовательские'}*/}
-                    {/*    onLinkClick={() => linkClickHandler()}*/}
+                    <Container fluid className={`customCanvas__top`}>
+                        {appStore.clientLinks.map(route =>
+                            <CustomDropdownMenu
+                                key={route.authType}
+                                menu={route}
+                                name={route.group}
+                                onLinkClick={() => linkClickHandler()}
+                            />
+                        )}
+                    </Container>
 
-                    {/*/>*/}
-                    {/*<CustomDropdownMenu*/}
-                    {/*    menu={appStore.routes.adminLinks}*/}
-                    {/*    name={'Авторизованные'}*/}
-                    {/*    onLinkClick={() => linkClickHandler()}*/}
-                    {/*/>*/}
+                    <Container fluid className={`customCanvas__bottom`}>
+                        {appStore.isAuth && (
+                            <IconButton clickHandler={() => exitClickHandler()}>
+                                <Button className={`customCanvas__button`} variant={"dark"}>
+                                    <Icon iconName={"DoorOpenFill"}/> Выход
+                                </Button>
+                            </IconButton>
+                        )}
+                    </Container>
                 </Offcanvas.Body>
             </Offcanvas>
         </Container>

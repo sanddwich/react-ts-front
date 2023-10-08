@@ -111,7 +111,10 @@ export default class AppStore {
         return res;
     }
 
-    logoutRequest = async (axiosRequestConfig: AxiosRequestConfig):Promise<AxiosResponse> => {
-        return await this.apiService.request(axiosRequestConfig);
+    logoutRequest = async (axiosRequestConfig: AxiosRequestConfig):Promise<any> => {
+        const res = await this.apiService.request(axiosRequestConfig);
+        if (!!res.status && !!res.data && res.status == 200 && !!res.data.result) {
+            this.setDefaultSettings();
+        };
     }
 }
