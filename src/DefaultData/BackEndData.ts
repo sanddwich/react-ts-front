@@ -1,6 +1,7 @@
 import BackendInterface from "../Interfaces/BackendInterface";
 
-const apiServer = "http://localhost:8000"
+const apiServer = "http://localhost:8000";
+const restApiUserController = apiServer + "/api/v1/users";
 
 const BackEndData: BackendInterface = {
     apiUrl: apiServer,
@@ -10,6 +11,7 @@ const BackEndData: BackendInterface = {
     authApiLogoutUrl: apiServer + "/api/v1/auth/logout",
     apiServiceControllerGetExample: apiServer + "/api/v1/service/getExample",
     apiServiceControllerPostExample: apiServer + "/api/v1/service/postExample",
+    test: apiServer + "/api/v1/users",
 }
 
 export default BackEndData;

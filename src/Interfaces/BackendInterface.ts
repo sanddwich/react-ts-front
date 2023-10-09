@@ -6,4 +6,5 @@ export default interface BackendInterface {
     authApiLogoutUrl: string
     apiServiceControllerGetExample: string
     apiServiceControllerPostExample: string
+    test: string
 }

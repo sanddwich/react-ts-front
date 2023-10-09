@@ -11,13 +11,13 @@ const TestPage = (props: TestPageInterface) => {
     const {appStore} = useContext(Context)
 
     const request = async (axiosRequestConfig: AxiosRequestConfig):Promise<any> => {
-        const res = await appStore.apiService.request(axiosRequestConfig);
+        const res = await appStore.authRequest(axiosRequestConfig);
         console.log(res);
     }
 
     const getRequest = ():void => {
         request({
-            url: appStore.backEnd.authApiRootPoint,
+            url: appStore.backEnd.test,
             method: "GET"
         });
     }
