@@ -17,7 +17,7 @@ const TestPage = (props: TestPageInterface) => {
 
     const getRequest = ():void => {
         request({
-            url: appStore.backEnd.test,
+            url: appStore.backEnd.restApiUsersPoint,
             method: "GET"
         });
     }

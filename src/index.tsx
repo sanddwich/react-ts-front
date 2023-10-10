@@ -5,8 +5,14 @@ import App from "./App";
 import {BrowserRouter} from 'react-router-dom'
 import AppStore from "./Store/AppStore";
 import ContextInterface from "./Interfaces/ContextInterface";
+import APIService from "./Services/APIService";
+import RestApiUserController from "./Solid/Classes/RestApiUserController";
+import User from "./Solid/Entities/User";
 
-const appStore = new AppStore();
+const appStore = new AppStore(
+    new APIService(),
+    new RestApiUserController(new APIService())
+);
 export const Context = createContext<ContextInterface>({
     appStore
 });

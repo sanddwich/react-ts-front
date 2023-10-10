@@ -1,0 +1,17 @@
+.UserForm {
+  padding: 0;
+
+  .UserForm__group {
+    padding-bottom: 10px;
+  }
+
+  .UserForm__buttonCont {
+    display: flex;
+    justify-content: right;
+    align-items: center;
+  }
+
+  .UserForm__muted {
+    color: #a52a2a !important;
+  }
+}

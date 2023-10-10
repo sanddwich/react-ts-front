@@ -1,10 +1,19 @@
 import axios, {AxiosRequestConfig, AxiosResponse, AxiosResponseHeaders, InternalAxiosRequestConfig} from 'axios';
 import BackEndData from "../DefaultData/BackEndData";
 import AuthRequestInterface from "../Interfaces/AuthRequestInterface";
-import UserDataInterface from "../Interfaces/UserDataInterface";
+import ApiServiceInterface from "../Solid/Ifaces/ApiServiceInterface";
 
-export default class APIService {
+//Singleton
+export default class APIService implements ApiServiceInterface{
     private axiosService = axios.create();
+    private static instance:APIService;
+
+    constructor() {
+        if (APIService.instance) {
+            return APIService.instance;
+        }
+        APIService.instance = this;
+    }
 
     request = async (axiosRequestConfig: AxiosRequestConfig):Promise<AxiosResponse> => {
         let res = {} as AxiosResponse;

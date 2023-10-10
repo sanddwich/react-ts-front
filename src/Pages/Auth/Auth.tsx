@@ -4,7 +4,7 @@ import {Button, Container, Form} from "react-bootstrap";
 import AuthForm from "../../Components/AuthForm/AuthForm";
 import AuthRequestInterface from "../../Interfaces/AuthRequestInterface";
 import {observer} from "mobx-react";
-import ErrorComponent from "../../Components/ErrorComponent/ErrorComponent";
+import MessageComponent from "../../Components/MessageComponent/MessageComponent";
 import {Context} from "../../index";
 
 interface AuthInterface {

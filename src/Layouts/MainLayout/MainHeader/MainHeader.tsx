@@ -32,8 +32,6 @@ const MainHeader = (props: MainHeaderInterface) => {
                 navigate('/');
             })
             .catch(e => console.warn(e));
-
-
     }
 
     return (

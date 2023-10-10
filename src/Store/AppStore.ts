@@ -7,6 +7,9 @@ import LinkListData from "../DefaultData/LinkListData";
 import APIService from "../Services/APIService";
 import {AxiosRequestConfig, AxiosResponse} from "axios";
 import NodeInterface from "../Interfaces/NodeInterface";
+import ApiServiceInterface from "../Solid/Ifaces/ApiServiceInterface";
+import RestApiControllerInterface from "../Solid/Ifaces/RestApiControllerInterface";
+import User from "../Solid/Entities/User";
 
 export default class AppStore {
     userData = {} as UserDataInterface;
@@ -16,10 +19,16 @@ export default class AppStore {
     routes = LinkListData as LinkListInterface;
     clientLinks: NodeInterface[] = [];
     linksVersion: number = Date.now();
-    apiService: APIService = new APIService();
+    apiService: ApiServiceInterface;
+    restApiUserController: RestApiControllerInterface<User>
     initialize: boolean = true;
 
-    constructor() {
+    constructor(
+        apiService: ApiServiceInterface,
+        restApiUserController: RestApiControllerInterface<User>
+    ) {
+        this.restApiUserController = restApiUserController
+        this.apiService = apiService;
         this.setTokenFromLocalStorage().then().catch(e => this.setDefaultSettings());
         makeAutoObservable(this);
     }

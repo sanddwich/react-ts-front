@@ -1,29 +1,67 @@
-import RestApiController from "../Ifaces/RestApiController";
+import RestApiControllerInterface from "../Ifaces/RestApiControllerInterface";
 import User from "../Entities/User";
+import ApiServiceInterface from "../Ifaces/ApiServiceInterface";
+import {AxiosRequestConfig, AxiosResponse} from "axios";
+import BackEndData from "../../DefaultData/BackEndData";
 
-export default class RestApiUserController implements RestApiController<User>{
-    create(object: User): User | undefined {
+export default class RestApiUserController implements RestApiControllerInterface<User> {
+    apiService: ApiServiceInterface;
+    private static instance: RestApiUserController;
+
+    constructor(apiService: ApiServiceInterface) {
+        this.apiService = apiService;
+
+        if (RestApiUserController.instance) {
+            return RestApiUserController.instance;
+        }
+
+        RestApiUserController.instance = this;
+    }
+
+    async create(token: string, object: User): Promise<AxiosResponse> {
+        // @ts-ignore
         return undefined;
     }
 
-    delete(object: User): User | undefined {
+    async delete(token: string, object: User): Promise<AxiosResponse> {
+        // @ts-ignore
         return undefined;
     }
 
-    get(): User | undefined {
+    async get(token: string): Promise<AxiosResponse> {
+        // @ts-ignore
         return undefined;
     }
 
-    getAll(): User[] {
+    async getAll(token: string): Promise<AxiosResponse> {
+        const axiosRequestConfig: AxiosRequestConfig = {
+            url: BackEndData.restApiUsersPoint + '/get_all',
+            method: "GET",
+            headers: {}
+        }
+
+        return await this.apiService.request(
+            this.addAuthHeaders(axiosRequestConfig, token)
+        );
+    }
+
+    async getPart(token: string, pagination: number): Promise<AxiosResponse> {
+        // @ts-ignore
         return [];
     }
 
-    getPart(pagination: number): User[] {
-        return [];
-    }
-
-    update(object: User): User | undefined {
+    async update(token: string, object: User): Promise<AxiosResponse> {
+        // @ts-ignore
         return undefined;
     }
 
+    addAuthHeaders = (axiosRequestConfig: AxiosRequestConfig, token: string): AxiosRequestConfig => {
+        const authHeaders = {
+            "Authorization": "Bearer " + token,
+            "Content-Type": "application/json",
+        };
+        axiosRequestConfig.headers = {...axiosRequestConfig.headers, ...authHeaders};
+
+        return axiosRequestConfig;
+    }
 }

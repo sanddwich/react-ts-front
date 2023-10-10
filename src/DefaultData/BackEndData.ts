@@ -11,7 +11,7 @@ const BackEndData: BackendInterface = {
     authApiLogoutUrl: apiServer + "/api/v1/auth/logout",
     apiServiceControllerGetExample: apiServer + "/api/v1/service/getExample",
     apiServiceControllerPostExample: apiServer + "/api/v1/service/postExample",
-    test: apiServer + "/api/v1/users",
+    restApiUsersPoint: apiServer + "/api/v1/users",
 }
 
 export default BackEndData;

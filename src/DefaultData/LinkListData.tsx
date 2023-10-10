@@ -6,6 +6,7 @@ import Default from "../Pages/Default/Default";
 import Second from "../Pages/Second/Second";
 import TestPage from "../Pages/TestPage/TestPage";
 import AdminMain from "../Pages/AdminMain/AdminMain";
+import AdminUsers from "../Pages/AdminUsers/AdminUsers";
 
 const adminNode = '/admin/'
 const superUserNode = '/superuser/'
@@ -24,10 +25,11 @@ const LinkListData: LinkListInterface = {
                 url: 'main',
                 component: <AdminMain/>
             },
-            // {
-            //     title: 'Admin users',
-            //     url: '/admin/users',
-            // },
+            {
+                title: 'Работа с пользователями',
+                url: 'users',
+                component: <AdminUsers />
+            },
             // {
             //     title: 'Admin accessRoles',
             //     url: '/admin/accessRoles',

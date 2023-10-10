@@ -1,0 +1,19 @@
+.AdminUsers {
+  padding-top: 10px;
+  width: 100%;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+
+  .AdminUsers__headers {
+    button {
+      font-weight: bold;
+      background-color: #adb5bd;
+    }
+  }
+
+  .AdminUsers__button {
+    margin-right: 5px;
+  }
+}
