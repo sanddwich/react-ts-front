@@ -12,7 +12,7 @@ export default class User extends BaseEntity{
     accessRole: AccessRole[]
 
     constructor(
-        id: number,
+        id: number | undefined,
         createdDate: Date,
         modifiedDate: Date,
         name: string | undefined,

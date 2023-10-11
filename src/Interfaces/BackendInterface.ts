@@ -7,4 +7,6 @@ export default interface BackendInterface {
     apiServiceControllerGetExample: string
     apiServiceControllerPostExample: string
     restApiUsersPoint: string
+    restApiAccessRolesPoint: string,
+    restApiPrivilegesPoint: string,
 }

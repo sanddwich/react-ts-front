@@ -1,29 +1,29 @@
 import RestApiControllerInterface from "../Ifaces/RestApiControllerInterface";
-import User from "../Entities/User";
 import ApiServiceInterface from "../Ifaces/ApiServiceInterface";
 import {AxiosRequestConfig, AxiosResponse} from "axios";
 import BackEndData from "../../DefaultData/BackEndData";
+import Privilege from "../Entities/Privilege";
 
-export default class RestApiUserController implements RestApiControllerInterface<User> {
+export default class RestApiPrivilegeController implements RestApiControllerInterface<Privilege> {
     apiService: ApiServiceInterface;
-    private static instance: RestApiUserController;
+    private static instance: RestApiPrivilegeController;
 
     constructor(apiService: ApiServiceInterface) {
         this.apiService = apiService;
 
-        if (RestApiUserController.instance) {
-            return RestApiUserController.instance;
+        if (RestApiPrivilegeController.instance) {
+            return RestApiPrivilegeController.instance;
         }
 
-        RestApiUserController.instance = this;
+        RestApiPrivilegeController.instance = this;
     }
 
-    async create(token: string, object: User): Promise<AxiosResponse> {
+    async create(token: string, object: Privilege): Promise<AxiosResponse> {
         // @ts-ignore
         return undefined;
     }
 
-    async delete(token: string, object: User): Promise<AxiosResponse> {
+    async delete(token: string, object: Privilege): Promise<AxiosResponse> {
         // @ts-ignore
         return undefined;
     }
@@ -35,7 +35,7 @@ export default class RestApiUserController implements RestApiControllerInterface
 
     async getAll(token: string): Promise<AxiosResponse> {
         const axiosRequestConfig: AxiosRequestConfig = {
-            url: BackEndData.restApiUsersPoint + '/get_all',
+            url: BackEndData.restApiPrivilegesPoint + '/get_all',
             method: "GET",
             headers: {}
         }
@@ -50,20 +50,23 @@ export default class RestApiUserController implements RestApiControllerInterface
         return [];
     }
 
-    async update(token: string, object: User): Promise<AxiosResponse> {
-        const axiosRequestConfig: AxiosRequestConfig = {
-            url: BackEndData.restApiUsersPoint + '/' + object.id,
-            method: "PATCH",
-            headers: {},
-            data: {
-                ...object
-            }
+    async update(token: string, object: Privilege): Promise<AxiosResponse> {
+        // const axiosRequestConfig: AxiosRequestConfig = {
+        //     url: BackEndData.restApiPrivilegesPoint + '/' + object.id,
+        //     method: "PATCH",
+        //     headers: {},
+        //     data: {
+        //         ...object
+        //     }
+        //
+        // }
+        //
+        // return await this.apiService.request(
+        //     this.addAuthHeaders(axiosRequestConfig, token)
+        // );
 
-        }
-
-        return await this.apiService.request(
-            this.addAuthHeaders(axiosRequestConfig, token)
-        );
+        // @ts-ignore
+        return undefined;
     }
 
     addAuthHeaders = (axiosRequestConfig: AxiosRequestConfig, token: string): AxiosRequestConfig => {

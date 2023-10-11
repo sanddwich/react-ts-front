@@ -8,6 +8,7 @@ import User from "../../Solid/Entities/User";
 import FullScreenLoader from "../../Components/FullScreenLoader/FullScreenLoader";
 import CustomModal from "../../Components/CustomModal/CustomModal";
 import UserForm from "../../Components/UserForm/UserForm";
+import {AxiosResponse} from "axios";
 
 interface AdminUsersProps {
 }
@@ -19,6 +20,7 @@ const AdminUsers = (props: AdminUsersProps) => {
     const [users, setUsers] = useState<Array<User>>([]);
     const [show, setShow] = useState(false);
     const [user, setUser] = useState<User | undefined>(undefined);
+    const [success, setSuccess] = useState<string>("");
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -30,29 +32,98 @@ const AdminUsers = (props: AdminUsersProps) => {
         }, 5000);
     }
 
-    useEffect(() => {
-        appStore.restApiUserController.getAll(appStore.token)
-            .then(res => {
-                if (!!res.status && res.status == 200) {
-                    console.log(res.data);
-                    setUsers(res.data.users);
-                    return;
-                }
+    const showSuccess = (message: string) => {
+        setSuccess(message);
+        setTimeout(() => {
+            setSuccess("");
+        }, 5000);
+    }
 
-                showError("Проблема доступа к API");
-            })
-            .catch(e => console.warn("RequestApiError: ", e))
-            .finally(() => setLoader(false));
+    useEffect(() => {
+        getAllData()
+            .then()
+            .catch(e => console.warn("getAllData ERROR: ", e))
+            .finally()
     }, []);
 
-    const updateUser = (user: User): void => {
+    const getAllData = async ():Promise<any> => {
         setLoader(true);
-        appStore.restApiUserController.update(appStore.token, user)
-            .then(res => {
+        await getAllUsers();
+        await getAllAccessRoles();
+        await getAllPrivileges();
+        setLoader(false);
+    }
 
-            })
-            .catch(e => console.warn("RequestApiError: ", e))
-            .finally(() => setLoader(false));
+    const getAllPrivileges = async ():Promise<AxiosResponse> => {
+        const res = await appStore.restApiPrivilegeController.getAll(appStore.token)
+        if (!!res.status) {
+            if (res.status == 200) {
+                appStore.setPrivileges(res.data.privileges);
+            }
+
+            if (res.status == 404) {
+                showError("Ошибка обращения API");
+                !!res.data.error && console.warn("Ошибка обращения API: ", res.data.error);
+            }
+        }
+
+        return res;
+    }
+
+    const getAllAccessRoles = async ():Promise<AxiosResponse> => {
+        const res = await appStore.restApiAccessRoleController.getAll(appStore.token);
+        if (!!res.status) {
+            if (res.status == 200) {
+                appStore.setAccessRoles(res.data.accessRoles);
+            }
+
+            if (res.status == 404) {
+                showError("Ошибка обращения API");
+                !!res.data.error && console.warn("Ошибка обращения API: ", res.data.error);
+            }
+        }
+
+        return res;
+    }
+
+    const formButtonClickHandler = async (user: User):Promise<any> => {
+        handleClose();
+        setLoader(true);
+        await updateUser(user);
+        setLoader(false);
+    }
+
+    const getAllUsers = async ():Promise<AxiosResponse> => {
+        const res = await appStore.restApiUserController.getAll(appStore.token);
+        if (!!res.status) {
+            if (res.status == 200) {
+                setUsers(res.data.users);
+            }
+
+            if (res.status == 404) {
+                showError("Ошибка обращения API");
+                !!res.data.error && console.warn("Ошибка обращения API: ", res.data.error);
+            }
+        }
+
+        return res;
+    }
+
+    const updateUser = async (user: User):Promise<AxiosResponse> => {
+        const res = await appStore.restApiUserController.update(appStore.token, user);
+        if (!!res.status) {
+            if (res.status == 200) {
+                showSuccess("Пользователь '" + user.username + "' обновлен!");
+                await getAllUsers();
+            }
+
+            if (res.status == 404) {
+                showError("Ошибка обращения API");
+                !!res.data.error && console.warn("Ошибка обращения API: ", res.data.error);
+            }
+        }
+
+        return res;
     }
 
     function deleteUser(user: User) {
@@ -76,7 +147,7 @@ const AdminUsers = (props: AdminUsersProps) => {
                 handleClose={() => setShow(false)}
                 keyboard={false}
             >
-                <UserForm user={user} />
+                <UserForm user={user} buttonClickHandler={formButtonClickHandler} />
             </CustomModal>
 
             {loader ? (
@@ -86,8 +157,9 @@ const AdminUsers = (props: AdminUsersProps) => {
             ) : (
                 <>
                     {!!error && <MessageComponent message={error} variant={"danger"}/>}
+                    {!!success && <MessageComponent message={success} variant={"success"}/>}
                     <h3>Работа с пользователями:</h3>
-                    {!!users.length ? (
+                    {!!users.length && (
                         <Accordion defaultActiveKey="0">
                             {users.map(user => (
                                 <Accordion.Item key={user.id} eventKey={user.username}>
@@ -148,8 +220,6 @@ const AdminUsers = (props: AdminUsersProps) => {
                                 </Accordion.Item>
                             ))}
                         </Accordion>
-                    ) : (
-                        <p className={`text-danger`}>Пользователи отсутствуют в БД</p>
                     )}
                 </>
             )}

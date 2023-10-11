@@ -12,6 +12,8 @@ const BackEndData: BackendInterface = {
     apiServiceControllerGetExample: apiServer + "/api/v1/service/getExample",
     apiServiceControllerPostExample: apiServer + "/api/v1/service/postExample",
     restApiUsersPoint: apiServer + "/api/v1/users",
+    restApiAccessRolesPoint: apiServer + "/api/v1/access_roles",
+    restApiPrivilegesPoint: apiServer + "/api/v1/privileges",
 }
 
 export default BackEndData;

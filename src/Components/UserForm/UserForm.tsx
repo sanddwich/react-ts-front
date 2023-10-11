@@ -10,6 +10,7 @@ import {ChangeEvent} from "react/index";
 
 interface UserFormProps {
     user?: User
+    buttonClickHandler: (user: User) => void
 }
 
 const UserForm = (props: UserFormProps) => {
@@ -42,7 +43,7 @@ const UserForm = (props: UserFormProps) => {
         }
 
         const user: User = new User(
-            !!props.user && !!props.user.id ? props.user.id : (new Date).getTime(),
+            !!props.user && !!props.user.id ? props.user.id : undefined,
             !!props.user && !!props.user.createdDate ? props.user.createdDate: new Date(),
             new Date(),
             data.name,
@@ -55,7 +56,7 @@ const UserForm = (props: UserFormProps) => {
             !!props.user && !!props.user.accessRole ? props.user.accessRole : []
         );
 
-        console.log(user);
+        props.buttonClickHandler(user);
     }
 
     const resetFields = (): void => {

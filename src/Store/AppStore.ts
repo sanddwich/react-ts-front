@@ -4,12 +4,13 @@ import BackendInterface from "../Interfaces/BackendInterface";
 import BackEndData from "../DefaultData/BackEndData";
 import LinkListInterface from "../Interfaces/LinkListInterface";
 import LinkListData from "../DefaultData/LinkListData";
-import APIService from "../Services/APIService";
 import {AxiosRequestConfig, AxiosResponse} from "axios";
 import NodeInterface from "../Interfaces/NodeInterface";
 import ApiServiceInterface from "../Solid/Ifaces/ApiServiceInterface";
 import RestApiControllerInterface from "../Solid/Ifaces/RestApiControllerInterface";
 import User from "../Solid/Entities/User";
+import AccessRole from "../Solid/Entities/AccessRole";
+import Privilege from "../Solid/Entities/Privilege";
 
 export default class AppStore {
     userData = {} as UserDataInterface;
@@ -21,13 +22,21 @@ export default class AppStore {
     linksVersion: number = Date.now();
     apiService: ApiServiceInterface;
     restApiUserController: RestApiControllerInterface<User>
+    restApiAccessRoleController: RestApiControllerInterface<AccessRole>
+    restApiPrivilegeController: RestApiControllerInterface<Privilege>
+    accessRoles: AccessRole[] = [];
+    privileges: Privilege[] = [];
     initialize: boolean = true;
 
     constructor(
         apiService: ApiServiceInterface,
-        restApiUserController: RestApiControllerInterface<User>
+        restApiUserController: RestApiControllerInterface<User>,
+        restApiAccessRoleController: RestApiControllerInterface<AccessRole>,
+        restApiPrivilegeController: RestApiControllerInterface<Privilege>
     ) {
-        this.restApiUserController = restApiUserController
+        this.restApiUserController = restApiUserController;
+        this.restApiAccessRoleController = restApiAccessRoleController;
+        this.restApiPrivilegeController = restApiPrivilegeController;
         this.apiService = apiService;
         this.setTokenFromLocalStorage().then().catch(e => this.setDefaultSettings());
         makeAutoObservable(this);
@@ -125,5 +134,13 @@ export default class AppStore {
         if (!!res.status && !!res.data && res.status == 200 && !!res.data.result) {
             this.setDefaultSettings();
         };
+    }
+
+    setAccessRoles = (accessRoles: AccessRole[]):void => {
+        this.accessRoles = accessRoles;
+    }
+
+    setPrivileges = (privileges: Privilege[]):void => {
+        this.privileges = privileges;
     }
 }
