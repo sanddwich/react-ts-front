@@ -9,6 +9,8 @@ import FullScreenLoader from "../../Components/FullScreenLoader/FullScreenLoader
 import CustomModal from "../../Components/CustomModal/CustomModal";
 import UserForm from "../../Components/UserForm/UserForm";
 import {AxiosResponse} from "axios";
+import AddAccessRolesForm from "../../Components/AddAccessRolesForm/AddAccessRolesForm";
+import AccessRole from "../../Solid/Entities/AccessRole";
 
 interface AdminUsersProps {
 }
@@ -19,6 +21,7 @@ const AdminUsers = (props: AdminUsersProps) => {
     const [error, setError] = useState<string>("");
     const [users, setUsers] = useState<Array<User>>([]);
     const [show, setShow] = useState(false);
+    const [accessRolesModal, setAccessRolesModal] = useState<boolean>(false);
     const [user, setUser] = useState<User | undefined>(undefined);
     const [success, setSuccess] = useState<string>("");
 
@@ -93,6 +96,10 @@ const AdminUsers = (props: AdminUsersProps) => {
         setLoader(false);
     }
 
+    const accessRolesFormButtonClickHandler = async (accessRoles: AccessRole[]):Promise<any> => {
+
+    }
+
     const getAllUsers = async ():Promise<AxiosResponse> => {
         const res = await appStore.restApiUserController.getAll(appStore.token);
         if (!!res.status) {
@@ -130,6 +137,11 @@ const AdminUsers = (props: AdminUsersProps) => {
 
     }
 
+    function addRolesButtonClick(user: User) {
+        setUser(user);
+        setAccessRolesModal(true);
+    }
+
     function updateButtonClick(user: User) {
         setUser(user);
         handleShow();
@@ -148,6 +160,18 @@ const AdminUsers = (props: AdminUsersProps) => {
                 keyboard={false}
             >
                 <UserForm user={user} buttonClickHandler={formButtonClickHandler} />
+            </CustomModal>
+
+            <CustomModal
+                title={`Изменение ролей`}
+                show={accessRolesModal}
+                handleClose={() => setAccessRolesModal(false)}
+                keyboard={false}
+            >
+                <AddAccessRolesForm
+                    user={user}
+                    buttonClickHandler={accessRolesFormButtonClickHandler}
+                />
             </CustomModal>
 
             {loader ? (
@@ -203,14 +227,21 @@ const AdminUsers = (props: AdminUsersProps) => {
                                                             variant={"primary"}
                                                             onClick={() => updateButtonClick(user)}
                                                         >
-                                                            Update
+                                                            Обновить
+                                                        </Button>
+                                                        <Button
+                                                            className={`AdminUsers__button`}
+                                                            variant={"info"}
+                                                            onClick={() => addRolesButtonClick(user)}
+                                                        >
+                                                            Изменить роли
                                                         </Button>
                                                         <Button
                                                             className={`AdminUsers__button`}
                                                             variant={"danger"}
                                                             onClick={() => deleteButtonClick(user)}
                                                         >
-                                                            Delete
+                                                            Удалить
                                                         </Button>
                                                     </td>
                                                 </tr>

@@ -9,7 +9,7 @@ export default class User extends BaseEntity{
     email: string
     active: boolean
     accessToken: string | undefined
-    accessRole: AccessRole[]
+    accessRoles: AccessRole[]
 
     constructor(
         id: number | undefined,
@@ -22,7 +22,7 @@ export default class User extends BaseEntity{
         email: string,
         active: boolean,
         accessToken: string | undefined,
-        accessRole: AccessRole[]
+        accessRoles: AccessRole[]
     ) {
         super(id, createdDate, modifiedDate);
         this.name = name;
@@ -32,7 +32,7 @@ export default class User extends BaseEntity{
         this.email = email;
         this.active = active;
         this.accessToken = accessToken;
-        this.accessRole = accessRole;
+        this.accessRoles = accessRoles;
     }
 
 

@@ -36,7 +36,7 @@ const UserForm = (props: UserFormProps) => {
         formState: {errors},
     } = useForm<User>({})
 
-    const buttonClickHandler = async (data: User): Promise<any> => {
+    const buttonClickHandler = (data: User) => {
         if (data.password !== passwordRepeat) {
             setPasswordRepeatError("Пароли не совпадают!");
             return;
@@ -53,9 +53,10 @@ const UserForm = (props: UserFormProps) => {
             data.email,
             active,
             data.accessToken,
-            !!props.user && !!props.user.accessRole ? props.user.accessRole : []
+            !!props.user && !!props.user.accessRoles ? props.user.accessRoles : []
         );
 
+        resetFields();
         props.buttonClickHandler(user);
     }
 

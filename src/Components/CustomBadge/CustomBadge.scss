@@ -1,0 +1,24 @@
+.CustomBadge {
+  border-radius: 5px;
+  margin: 3px;
+
+  :hover {
+    cursor: pointer;
+    border-radius: 5px;
+    background-color: #f35b5b !important;
+  }
+
+  .CustomBadge__cont {
+    padding: 5px;
+    padding-left: 15px;
+    padding-right: 15px;
+    color: #FFFFFF;
+
+    .CustomBadge__img {
+      padding-left: 5px;
+      padding-right: 5px;
+      margin-top: -2px;
+    }
+  }
+
+}
