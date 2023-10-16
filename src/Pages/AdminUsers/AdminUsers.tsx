@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useState} from 'react';
 import './AdminUsers.scss';
-import {Accordion, Button, Container, Modal, Table} from "react-bootstrap";
+import {Accordion, Badge, Button, Container, Modal, Table} from "react-bootstrap";
 import {Context} from "../../index";
 import Loader from "../../Components/Loader/Loader";
 import MessageComponent from "../../Components/MessageComponent/MessageComponent";
@@ -90,6 +90,7 @@ const AdminUsers = (props: AdminUsersProps) => {
     }
 
     const formButtonClickHandler = async (user: User): Promise<any> => {
+        console.log(user);
         handleClose();
         setLoader(true);
         await updateUser(user);
@@ -226,7 +227,10 @@ const AdminUsers = (props: AdminUsersProps) => {
                                             </tr>
                                             <tr>
                                                 <td>Active</td>
-                                                <td>{!!user.active && user.active}</td>
+                                                <td>{!!user.active
+                                                    ? (<Badge bg={"success"}>Активен</Badge>)
+                                                    : (<Badge bg={"danger"}>Не активен</Badge>)}
+                                                </td>
                                             </tr>
                                             <tr>
                                                 <td>Actions</td>

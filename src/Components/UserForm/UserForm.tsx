@@ -200,6 +200,7 @@ const UserForm = (props: UserFormProps) => {
                     <Form.Control
                         type="password"
                         placeholder="password"
+                        {...register('password', {})}
                     />
                     {errors.password && (
                         <Form.Text
