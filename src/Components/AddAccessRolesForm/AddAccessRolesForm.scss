@@ -14,4 +14,47 @@
   .AddAccessRolesForm__muted {
     color: #a52a2a !important;
   }
+
+  .AddAccessRolesForm__userRolesList {
+    padding: 5px;
+    margin-bottom: 10px;
+    max-height: 300px;
+    overflow-y: scroll;
+    overflow-scrolling: auto;
+  }
+
+  .AddAccessRolesForm__listRoles {
+    padding: 5px;
+    margin-bottom: 10px;
+    max-height: 300px;
+    overflow-y: scroll;
+    overflow-scrolling: auto;
+
+
+    .AddAccessRolesForm__addRole {
+      border: #eeeeee 1px solid;
+      border-radius: 5px;
+      margin-bottom: 3px;
+
+      .form-check {
+        .form-check-input {
+          margin-top: 8px !important;
+        }
+
+        .form-check-label {
+          width: 100%;
+          padding-top: 5px;
+          padding-bottom: 5px;
+          cursor: pointer;
+        }
+      }
+
+      &:hover {
+        cursor: pointer;
+        background-color: #eeeeee;
+      }
+
+
+    }
+  }
 }

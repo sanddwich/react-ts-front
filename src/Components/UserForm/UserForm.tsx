@@ -7,6 +7,7 @@ import {useForm} from "react-hook-form";
 import Loader from "../Loader/Loader";
 import User from "../../Solid/Entities/User";
 import {ChangeEvent} from "react/index";
+import AddAccessRolesForm from "../AddAccessRolesForm/AddAccessRolesForm";
 
 interface UserFormProps {
     user?: User
@@ -37,7 +38,7 @@ const UserForm = (props: UserFormProps) => {
     } = useForm<User>({})
 
     const buttonClickHandler = (data: User) => {
-        if (data.password !== passwordRepeat) {
+        if (!!data.password && !!passwordRepeat && data.password !== passwordRepeat) {
             setPasswordRepeatError("Пароли не совпадают!");
             return;
         }
@@ -199,13 +200,6 @@ const UserForm = (props: UserFormProps) => {
                     <Form.Control
                         type="password"
                         placeholder="password"
-                        {...register('password', {
-                            required: {value: true, message: 'Обязательное поле для заполнения'},
-                            minLength: {
-                                value: minLength,
-                                message: 'Недостаточное кол-во символов. Минимальное: ' + minLength,
-                            },
-                        })}
                     />
                     {errors.password && (
                         <Form.Text
@@ -235,6 +229,8 @@ const UserForm = (props: UserFormProps) => {
                         </Form.Text>
                     )}
                 </Form.Group>
+                
+                <AddAccessRolesForm user={props.user} formAtForm={true} />
 
                 <Form.Group className={`UserForm__buttonCont`} controlId={`formBasicButton`}>
                     {loading ? <Loader/> : (

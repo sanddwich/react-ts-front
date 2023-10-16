@@ -2,6 +2,7 @@ import React from 'react';
 import './CustomBadge.scss';
 import {Icon} from "../Icon";
 import {Container} from "react-bootstrap";
+import AccessRole from "../../Solid/Entities/AccessRole";
 
 interface CustomBadgeProps {
     showImg: "right" | "left"

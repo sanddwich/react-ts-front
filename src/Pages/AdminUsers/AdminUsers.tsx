@@ -49,7 +49,7 @@ const AdminUsers = (props: AdminUsersProps) => {
             .finally()
     }, []);
 
-    const getAllData = async ():Promise<any> => {
+    const getAllData = async (): Promise<any> => {
         setLoader(true);
         await getAllUsers();
         await getAllAccessRoles();
@@ -57,7 +57,7 @@ const AdminUsers = (props: AdminUsersProps) => {
         setLoader(false);
     }
 
-    const getAllPrivileges = async ():Promise<AxiosResponse> => {
+    const getAllPrivileges = async (): Promise<AxiosResponse> => {
         const res = await appStore.restApiPrivilegeController.getAll(appStore.token)
         if (!!res.status) {
             if (res.status == 200) {
@@ -73,7 +73,7 @@ const AdminUsers = (props: AdminUsersProps) => {
         return res;
     }
 
-    const getAllAccessRoles = async ():Promise<AxiosResponse> => {
+    const getAllAccessRoles = async (): Promise<AxiosResponse> => {
         const res = await appStore.restApiAccessRoleController.getAll(appStore.token);
         if (!!res.status) {
             if (res.status == 200) {
@@ -89,18 +89,26 @@ const AdminUsers = (props: AdminUsersProps) => {
         return res;
     }
 
-    const formButtonClickHandler = async (user: User):Promise<any> => {
+    const formButtonClickHandler = async (user: User): Promise<any> => {
         handleClose();
         setLoader(true);
         await updateUser(user);
         setLoader(false);
     }
 
-    const accessRolesFormButtonClickHandler = async (accessRoles: AccessRole[]):Promise<any> => {
+    const accessRolesFormButtonClickHandler = async (user: User | undefined): Promise<any> => {
+        setAccessRolesModal(false);
 
+        if (!!user) {
+            setLoader(true);
+            await updateUser(user);
+            setLoader(false);
+        } else {
+            setError("Ошибка обновления ролей пользователя!");
+        }
     }
 
-    const getAllUsers = async ():Promise<AxiosResponse> => {
+    const getAllUsers = async (): Promise<AxiosResponse> => {
         const res = await appStore.restApiUserController.getAll(appStore.token);
         if (!!res.status) {
             if (res.status == 200) {
@@ -116,7 +124,7 @@ const AdminUsers = (props: AdminUsersProps) => {
         return res;
     }
 
-    const updateUser = async (user: User):Promise<AxiosResponse> => {
+    const updateUser = async (user: User): Promise<AxiosResponse> => {
         const res = await appStore.restApiUserController.update(appStore.token, user);
         if (!!res.status) {
             if (res.status == 200) {
@@ -159,24 +167,24 @@ const AdminUsers = (props: AdminUsersProps) => {
                 handleClose={() => setShow(false)}
                 keyboard={false}
             >
-                <UserForm user={user} buttonClickHandler={formButtonClickHandler} />
+                <UserForm user={user} buttonClickHandler={formButtonClickHandler}/>
             </CustomModal>
 
-            <CustomModal
-                title={`Изменение ролей`}
-                show={accessRolesModal}
-                handleClose={() => setAccessRolesModal(false)}
-                keyboard={false}
-            >
-                <AddAccessRolesForm
-                    user={user}
-                    buttonClickHandler={accessRolesFormButtonClickHandler}
-                />
-            </CustomModal>
+            {/*<CustomModal*/}
+            {/*    title={`Изменение ролей`}*/}
+            {/*    show={accessRolesModal}*/}
+            {/*    handleClose={() => setAccessRolesModal(false)}*/}
+            {/*    keyboard={false}*/}
+            {/*>*/}
+            {/*    <AddAccessRolesForm*/}
+            {/*        user={user}*/}
+            {/*        buttonClickHandler={accessRolesFormButtonClickHandler}*/}
+            {/*    />*/}
+            {/*</CustomModal>*/}
 
             {loader ? (
                 <FullScreenLoader>
-                    <Loader />
+                    <Loader/>
                 </FullScreenLoader>
             ) : (
                 <>
@@ -187,64 +195,65 @@ const AdminUsers = (props: AdminUsersProps) => {
                         <Accordion defaultActiveKey="0">
                             {users.map(user => (
                                 <Accordion.Item key={user.id} eventKey={user.username}>
-                                    <Accordion.Header className={`AdminUsers__headers`}>{user.username}</Accordion.Header>
+                                    <Accordion.Header
+                                        className={`AdminUsers__headers`}>{user.username}</Accordion.Header>
                                     <Accordion.Body>
                                         <Table>
                                             <tbody>
-                                                <tr>
-                                                    <td>Username</td>
-                                                    <td>{!!user.username && user.username}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Email</td>
-                                                    <td>{!!user.email && user.email}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Name</td>
-                                                    <td>{!!user.name && user.name}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Surname</td>
-                                                    <td>{!!user.surname && user.surname}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>CreateDate</td>
-                                                    <td>{!!user.createdDate && String(user.createdDate)}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>ModifiedDate</td>
-                                                    <td>{!!user.modifiedDate && String(user.modifiedDate)}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Active</td>
-                                                    <td>{!!user.active && user.active}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Actions</td>
-                                                    <td>
-                                                        <Button
-                                                            className={`AdminUsers__button`}
-                                                            variant={"primary"}
-                                                            onClick={() => updateButtonClick(user)}
-                                                        >
-                                                            Обновить
-                                                        </Button>
-                                                        <Button
-                                                            className={`AdminUsers__button`}
-                                                            variant={"info"}
-                                                            onClick={() => addRolesButtonClick(user)}
-                                                        >
-                                                            Изменить роли
-                                                        </Button>
-                                                        <Button
-                                                            className={`AdminUsers__button`}
-                                                            variant={"danger"}
-                                                            onClick={() => deleteButtonClick(user)}
-                                                        >
-                                                            Удалить
-                                                        </Button>
-                                                    </td>
-                                                </tr>
+                                            <tr>
+                                                <td>Username</td>
+                                                <td>{!!user.username && user.username}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Email</td>
+                                                <td>{!!user.email && user.email}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Name</td>
+                                                <td>{!!user.name && user.name}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Surname</td>
+                                                <td>{!!user.surname && user.surname}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>CreateDate</td>
+                                                <td>{!!user.createdDate && String(user.createdDate)}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>ModifiedDate</td>
+                                                <td>{!!user.modifiedDate && String(user.modifiedDate)}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Active</td>
+                                                <td>{!!user.active && user.active}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Actions</td>
+                                                <td>
+                                                    <Button
+                                                        className={`AdminUsers__button`}
+                                                        variant={"primary"}
+                                                        onClick={() => updateButtonClick(user)}
+                                                    >
+                                                        Изменить
+                                                    </Button>
+                                                    {/*<Button*/}
+                                                    {/*    className={`AdminUsers__button`}*/}
+                                                    {/*    variant={"info"}*/}
+                                                    {/*    onClick={() => addRolesButtonClick(user)}*/}
+                                                    {/*>*/}
+                                                    {/*    Редактировать Роли*/}
+                                                    {/*</Button>*/}
+                                                    <Button
+                                                        className={`AdminUsers__button`}
+                                                        variant={"danger"}
+                                                        onClick={() => deleteButtonClick(user)}
+                                                    >
+                                                        Удалить
+                                                    </Button>
+                                                </td>
+                                            </tr>
                                             </tbody>
                                         </Table>
                                     </Accordion.Body>
