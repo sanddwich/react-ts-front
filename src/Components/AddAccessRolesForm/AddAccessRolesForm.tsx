@@ -19,7 +19,7 @@ const AddAccessRolesForm = (props: AddAccessRolesFormProps) => {
     const [loading, setLoading] = useState<boolean>(false);
     const {appStore} = useContext(Context);
     const [userRoles, setUserRoles] = useState<Array<AccessRole>>(() => {
-            if (!!props.user && !!props.user.accessRoles) return props.user.accessRoles;
+            if (!!props.user && !!props.user.accessRoles) return props.user.accessRoles.slice(0);
             return [];
         }
     );
