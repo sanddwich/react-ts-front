@@ -105,11 +105,10 @@ const AdminUsers = (props: AdminUsersProps) => {
     }
 
     const addUserClickHandler = async (user: User): Promise<any> => {
-        // handleClose();
-        console.log(user);
-        // setLoader(true);
-        // await addUser(user);
-        // setLoader(false);
+        handleClose();
+        setLoader(true);
+        await addUser(user);
+        setLoader(false);
     }
 
     const updateUserClickHandler = async (user: User): Promise<any> => {
