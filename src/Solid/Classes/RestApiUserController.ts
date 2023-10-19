@@ -19,8 +19,18 @@ export default class RestApiUserController implements RestApiControllerInterface
     }
 
     async create(token: string, object: User): Promise<AxiosResponse> {
-        // @ts-ignore
-        return undefined;
+        const axiosRequestConfig: AxiosRequestConfig = {
+            url: BackEndData.restApiUsersPoint + '/add',
+            method: "POST",
+            headers: {},
+            data: {
+                ...object
+            }
+        }
+
+        return await this.apiService.request(
+            this.addAuthHeaders(axiosRequestConfig, token)
+        );
     }
 
     async delete(token: string, object: User): Promise<AxiosResponse> {

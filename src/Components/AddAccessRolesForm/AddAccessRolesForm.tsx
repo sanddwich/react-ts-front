@@ -7,6 +7,7 @@ import {useForm} from "react-hook-form";
 import AccessRole from "../../Solid/Entities/AccessRole";
 import {Context} from "../../index";
 import CustomBadge from "../CustomBadge/CustomBadge";
+import {Icon} from "../Icon";
 
 interface AddAccessRolesFormProps {
     user?: User
@@ -18,21 +19,14 @@ const AddAccessRolesForm = (props: AddAccessRolesFormProps) => {
     const [formAtForm, setFormAtForm] = useState<boolean>(!!props.formAtForm);
     const [loading, setLoading] = useState<boolean>(false);
     const {appStore} = useContext(Context);
-    const [userRoles, setUserRoles] = useState<Array<AccessRole>>(() => {
-            if (!!props.user && !!props.user.accessRoles) return props.user.accessRoles.slice(0);
-            return [];
-        }
-    );
-    const [additionalRoles, setAdditionalRoles] = useState<Array<AccessRole>>(() => {
+    const filterUserRoles = ():Array<AccessRole> => {
         let res = appStore.accessRoles;
-        userRoles.map(role => {
+        props.user?.accessRoles.map(role => {
             res = res.filter(f => f.code !== role.code);
         });
         return sorting(res);
-    });
-    const [addRolesPool, setAddRolesPool] = useState<Array<AccessRole>>(() => {
-        return additionalRoles;
-    });
+    }
+    const [additionalRoles, setAdditionalRoles] = useState<Array<AccessRole>>(filterUserRoles());
     const [search, setSearch] = useState<string>("");
 
     function sorting(arr: Array<AccessRole>): Array<AccessRole> {
@@ -41,50 +35,45 @@ const AddAccessRolesForm = (props: AddAccessRolesFormProps) => {
         });
     }
 
-    const buttonClickHandler = () => {
-        let user = undefined;
-        if (!!props.user) {
-            user = props.user;
-            user.accessRoles = userRoles;
-        }
-
-        if (!!props.buttonClickHandler) props.buttonClickHandler(user);
-    }
-
     const keyUpHandler = (val: string): void => {
         setSearch(val);
-        if (!!val) {
-            setAdditionalRoles(addRolesPool.filter(role => (
+        setAdditionalRoles(filter(val));
+    }
+
+    const filter = (val: string):Array<AccessRole> => {
+        return sorting(filterSearch(filterUserRoles(), val));
+    }
+
+    const filterSearch = (arr: Array<AccessRole>, val:string):Array<AccessRole> => {
+        return arr.filter(role => (
                 role.code.toUpperCase().indexOf(val.toUpperCase()) > -1
                 || role.name.toUpperCase().indexOf(val.toUpperCase()) > -1
                 || role.description.toUpperCase().indexOf(val.toUpperCase()) > -1
-            )));
-        } else {
-            setAdditionalRoles(addRolesPool);
-        }
+            )
+        )
     }
 
     const addRoleClickHandler = (role: AccessRole): void => {
-        setAdditionalRoles(
-            sorting(additionalRoles.filter(el => el.code !== role.code))
-        );
-        userRoles.push(role);
-        setUserRoles(userRoles);
+        props.user?.accessRoles.push(role);
+        setAdditionalRoles(filter(search));
     }
 
     const userRoleClickHandler = (role: AccessRole): void => {
-        setUserRoles(
-            userRoles.filter(el => el.code !== role.code)
-        );
-        additionalRoles.push(role);
-        setAdditionalRoles(sorting(additionalRoles));
+        if (!!props.user && !!props.user.accessRoles) {
+            props.user.accessRoles = props.user?.accessRoles.filter(el => el.code !== role.code);
+        }
+        setAdditionalRoles(filter(search));
+    }
+
+    const buttonClickHandler = ():void => {
+
     }
 
     return (
         <Container fluid className={`AddAccessRolesForm`}>
             {/*<Form>*/}
             <Form.Group className={`AddAccessRolesForm__group`} controlId="formRoleCodes">
-                <Form.Label className={`AddAccessRolesForm__label`}>Логин</Form.Label>
+                <Form.Label className={`AddAccessRolesForm__label`}>Поиск ролей</Form.Label>
                 <Form.Control
                     type="text"
                     placeholder="Введите код роли"
@@ -111,11 +100,12 @@ const AddAccessRolesForm = (props: AddAccessRolesFormProps) => {
             <Form.Group className={`AddAccessRolesForm__userRolesList`} controlId="formAddedRoleCodes">
                 <Form.Label className={`AddAccessRolesForm__label`}>Роли пользователя:</Form.Label>
                 <Container fluid className={`AddAccessRolesForm__Roles p-0 d-flex`}>
-                    {userRoles.map((role) => (
+                    {props.user?.accessRoles.map((role) => (
                         <div key={role.code} onClick={() => userRoleClickHandler(role)}>
                             <CustomBadge
                                 showImg={"right"}
                                 title={role.name}
+                                icon={<Icon iconName={"Trash3Fill"}/>}
                             />
                         </div>
                     ))}

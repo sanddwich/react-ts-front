@@ -6,6 +6,23 @@
   flex-direction: column;
   flex: 1 1 auto;
 
+  .AdminUsers__search {
+    margin-bottom: 10px;
+
+    .AdminUsers__searchTextField {
+      width: 300px;
+    }
+  }
+
+  .AdminUsers__buttonImg {
+    margin-top: -2px;
+    margin-right: 5px;
+  }
+
+  .AdminUsers__group {
+    margin-right: 5px;
+  }
+
   .AdminUsers__headers {
     button {
       font-weight: bold;

@@ -6,12 +6,13 @@ import {useNavigate} from "react-router-dom";
 import {useForm} from "react-hook-form";
 import Loader from "../Loader/Loader";
 import User from "../../Solid/Entities/User";
-import {ChangeEvent} from "react/index";
 import AddAccessRolesForm from "../AddAccessRolesForm/AddAccessRolesForm";
+import {AddUpdateType} from "../../Interfaces/AddUpdateType";
 
 interface UserFormProps {
     user?: User
     buttonClickHandler: (user: User) => void
+    formMode: AddUpdateType
 }
 
 const UserForm = (props: UserFormProps) => {
@@ -38,9 +39,24 @@ const UserForm = (props: UserFormProps) => {
     } = useForm<User>({})
 
     const buttonClickHandler = (data: User) => {
-        if (!!data.password && !!passwordRepeat && data.password !== passwordRepeat) {
+        if (
+            props.formMode == "UPDATE"
+            && !!data.password && !!passwordRepeat
+            && data.password !== passwordRepeat
+        ) {
             setPasswordRepeatError("Пароли не совпадают!");
             return;
+        }
+
+        if (props.formMode == "ADD") {
+            if (!data.password || !passwordRepeat) {
+                setPasswordRepeatError("Не заполнены поля Пароль / Подтвенждение пароля");
+                return;
+            }
+            if (data.password !== passwordRepeat) {
+                setPasswordRepeatError("Пароли не совпадают!");
+                return;
+            }
         }
 
         const user: User = new User(
@@ -57,7 +73,7 @@ const UserForm = (props: UserFormProps) => {
             !!props.user && !!props.user.accessRoles ? props.user.accessRoles : []
         );
 
-        resetFields();
+        // resetFields();
         props.buttonClickHandler(user);
     }
 

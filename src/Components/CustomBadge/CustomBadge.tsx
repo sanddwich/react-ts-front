@@ -7,6 +7,7 @@ import AccessRole from "../../Solid/Entities/AccessRole";
 interface CustomBadgeProps {
     showImg: "right" | "left"
     title: string
+    icon: JSX.Element
 }
 
 const CustomBadge = (props: CustomBadgeProps) => {
@@ -15,7 +16,8 @@ const CustomBadge = (props: CustomBadgeProps) => {
             <div className={`CustomBadge__cont  d-inline-flex`}>
                 {props.showImg == "left" && (
                     <div className={`CustomBadge__img`}>
-                        <Icon iconName={"Trash3Fill"}/>
+                        {props.icon}
+                        {/*<Icon iconName={"Trash3Fill"}/>*/}
                     </div>
                 )}
                 <div className={`CustomBadge__title`}>
@@ -23,7 +25,8 @@ const CustomBadge = (props: CustomBadgeProps) => {
                 </div>
                 {props.showImg == "right" && (
                     <div className={`CustomBadge__img`}>
-                        <Icon iconName={"Trash3Fill"}/>
+                        {props.icon}
+                        {/*<Icon iconName={"Trash3Fill"}/>*/}
                     </div>
                 )}
             </div>

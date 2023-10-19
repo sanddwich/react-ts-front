@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useState} from 'react';
 import './AdminUsers.scss';
-import {Accordion, Badge, Button, Container, Modal, Table} from "react-bootstrap";
+import {Accordion, Badge, Button, Container, Form, Modal, Table} from "react-bootstrap";
 import {Context} from "../../index";
 import Loader from "../../Components/Loader/Loader";
 import MessageComponent from "../../Components/MessageComponent/MessageComponent";
@@ -9,7 +9,8 @@ import FullScreenLoader from "../../Components/FullScreenLoader/FullScreenLoader
 import CustomModal from "../../Components/CustomModal/CustomModal";
 import UserForm from "../../Components/UserForm/UserForm";
 import {AxiosResponse} from "axios";
-import AddAccessRolesForm from "../../Components/AddAccessRolesForm/AddAccessRolesForm";
+import {Icon} from "../../Components/Icon";
+import {AddUpdateType} from "../../Interfaces/AddUpdateType";
 import AccessRole from "../../Solid/Entities/AccessRole";
 
 interface AdminUsersProps {
@@ -24,6 +25,8 @@ const AdminUsers = (props: AdminUsersProps) => {
     const [accessRolesModal, setAccessRolesModal] = useState<boolean>(false);
     const [user, setUser] = useState<User | undefined>(undefined);
     const [success, setSuccess] = useState<string>("");
+    const [formMode, setFormMode] = useState<AddUpdateType>("ADD");
+    const [userAccessRoleCopy, setUserAccessRoleCopy] = useState<Array<AccessRole>>([]);
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -90,23 +93,30 @@ const AdminUsers = (props: AdminUsersProps) => {
     }
 
     const formButtonClickHandler = async (user: User): Promise<any> => {
+        if (formMode == "UPDATE") {
+            await updateUserClickHandler(user);
+            return;
+        }
+
+        if (formMode == "ADD") {
+            await addUserClickHandler(user);
+            return;
+        }
+    }
+
+    const addUserClickHandler = async (user: User): Promise<any> => {
+        // handleClose();
         console.log(user);
+        // setLoader(true);
+        // await addUser(user);
+        // setLoader(false);
+    }
+
+    const updateUserClickHandler = async (user: User): Promise<any> => {
         handleClose();
         setLoader(true);
         await updateUser(user);
         setLoader(false);
-    }
-
-    const accessRolesFormButtonClickHandler = async (user: User | undefined): Promise<any> => {
-        setAccessRolesModal(false);
-
-        if (!!user) {
-            setLoader(true);
-            await updateUser(user);
-            setLoader(false);
-        } else {
-            setError("Ошибка обновления ролей пользователя!");
-        }
     }
 
     const getAllUsers = async (): Promise<AxiosResponse> => {
@@ -125,10 +135,29 @@ const AdminUsers = (props: AdminUsersProps) => {
         return res;
     }
 
+    const addUser = async (user: User): Promise<AxiosResponse> => {
+        const res = await appStore.restApiUserController.create(appStore.token, user);
+        if (!!res.status) {
+            if (res.status == 200) {
+                console.log(res.data);
+                showSuccess("Новый пользователь '" + user.username + "' создан!");
+                await getAllUsers();
+            }
+
+            if (res.status == 404) {
+                showError("Ошибка обращения API");
+                !!res.data.error && console.warn("Ошибка обращения API: ", res.data.error);
+            }
+        }
+
+        return res;
+    }
+
     const updateUser = async (user: User): Promise<AxiosResponse> => {
         const res = await appStore.restApiUserController.update(appStore.token, user);
         if (!!res.status) {
             if (res.status == 200) {
+                console.log(res.data);
                 showSuccess("Пользователь '" + user.username + "' обновлен!");
                 await getAllUsers();
             }
@@ -146,18 +175,47 @@ const AdminUsers = (props: AdminUsersProps) => {
 
     }
 
-    function addRolesButtonClick(user: User) {
+    function updateUserButtonClickHandler(user: User) {
+        setFormMode("UPDATE");
         setUser(user);
-        setAccessRolesModal(true);
+        setUserAccessRoleCopy(user.accessRoles.slice(0));
+        handleShow();
     }
 
-    function updateButtonClick(user: User) {
-        setUser(user);
+    const addUserButtonClickHandler = ():void => {
+        setFormMode("ADD");
+        setUser(new User(
+            undefined,
+            new Date(),
+            new Date(),
+            undefined,
+            undefined,
+            "",
+            "",
+            "",
+            true,
+            undefined,
+            []
+        ));
+        setUserAccessRoleCopy([]);
         handleShow();
     }
 
     function deleteButtonClick(user: User) {
 
+    }
+    
+    const keyUpHandler = (val: string):void => {
+        
+    }
+
+    const searchClickHandler = ():void => {
+
+    }
+
+    const closeUserForm = ():void => {
+        if (!!user?.accessRoles) user.accessRoles = userAccessRoleCopy;
+        setShow(false);
     }
 
     return (
@@ -165,10 +223,14 @@ const AdminUsers = (props: AdminUsersProps) => {
             <CustomModal
                 title={"Пользователь"}
                 show={show}
-                handleClose={() => setShow(false)}
+                handleClose={() => closeUserForm()}
                 keyboard={false}
             >
-                <UserForm user={user} buttonClickHandler={formButtonClickHandler}/>
+                <UserForm
+                    user={user}
+                    buttonClickHandler={formButtonClickHandler}
+                    formMode={formMode}
+                />
             </CustomModal>
 
             {/*<CustomModal*/}
@@ -192,6 +254,39 @@ const AdminUsers = (props: AdminUsersProps) => {
                     {!!error && <MessageComponent message={error} variant={"danger"}/>}
                     {!!success && <MessageComponent message={success} variant={"success"}/>}
                     <h3>Работа с пользователями:</h3>
+
+                    <Container fluid className={`AdminUsers__search p-0 d-flex align-items-end`}>
+                        <Form.Group className={`AdminUsers__group`} controlId="formUsernames">
+                            <Form.Label className={`AdminUsers__label`}>Поиск по логину</Form.Label>
+                            <Form.Control
+                                type="text"
+                                placeholder="Введите часть логина пользователя"
+                                className={`AdminUsers__searchTextField`}
+                                onKeyUp={(event) => {
+                                    keyUpHandler((event.target as HTMLInputElement).value)
+                                }}
+                            />
+                        </Form.Group>
+                        <Form.Group className={`AdminUsers__group`} controlId="actionButtons">
+                            <Button
+                                variant={"secondary"}
+                                className={`AdminUsers__button`}
+                                onClick={() => searchClickHandler()}
+                            >
+                                <Icon className={`AdminUsers__buttonImg`} iconName={"Search"} />
+                                Поиск
+                            </Button>
+                            <Button
+                                variant={"primary"}
+                                className={`AdminUsers__button`}
+                                onClick={() => addUserButtonClickHandler()}
+                            >
+                                <Icon className={`AdminUsers__buttonImg`} iconName={"PersonFillAdd"} />
+                                Добавить нового пользователя
+                            </Button>
+                        </Form.Group>
+                    </Container>
+
                     {!!users.length && (
                         <Accordion defaultActiveKey="0">
                             {users.map(user => (
@@ -238,7 +333,7 @@ const AdminUsers = (props: AdminUsersProps) => {
                                                     <Button
                                                         className={`AdminUsers__button`}
                                                         variant={"primary"}
-                                                        onClick={() => updateButtonClick(user)}
+                                                        onClick={() => updateUserButtonClickHandler(user)}
                                                     >
                                                         Изменить
                                                     </Button>
