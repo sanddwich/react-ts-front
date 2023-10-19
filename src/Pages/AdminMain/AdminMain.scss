@@ -1,2 +1,30 @@
 .AdminMain {
+  padding-top: 10px;
+  padding-bottom: 20px;
+
+  .AdminMain__cardIcon {
+    padding: 0;
+  }
+
+  .AdminMain__cards {
+    padding: 0;
+    padding-top: 20px;
+
+    .AdminMain__card {
+      width: 300px;
+
+      .AdminMain__cardIcon {
+        min-height: 100px;
+
+        svg {
+          width: 100px;
+          height: 100px;
+        }
+      }
+    }
+
+    .AdminMain__cardButton {
+      padding-top: 20px;
+    }
+  }
 }

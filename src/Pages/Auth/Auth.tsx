@@ -12,9 +12,14 @@ interface AuthInterface {
 
 const Auth = (props: AuthInterface) => {
     const {appStore} = useContext(Context);
+    const [error, setError] = useState<string>("");
 
-    const buttonClickHandler = (authData: AuthRequestInterface): void => {
-        // console.log(authData);
+    const showError = (message: string) => {
+        // console.log(message);
+        setError(message);
+        setTimeout(() => {
+            setError("");
+        }, 5000);
     }
 
     return (
@@ -22,7 +27,9 @@ const Auth = (props: AuthInterface) => {
             fluid
             className={`Auth p-0`}
         >
-            <AuthForm buttonClickHandler={buttonClickHandler}/>
+            <AuthForm showError={showError}/>
+            <div className={`p-2`}></div>
+            {!!error && <MessageComponent message={error} variant={"danger"}/>}
         </Container>
     );
 }

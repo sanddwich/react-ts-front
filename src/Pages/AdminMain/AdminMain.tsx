@@ -1,49 +1,56 @@
 import React, {useContext, useEffect, useState} from 'react';
 import './AdminMain.scss';
-import {Button, Container} from "react-bootstrap";
+import {Button, Card, Container} from "react-bootstrap";
 import {Context} from "../../index";
+import {NavLink} from "react-router-dom";
 
-interface AdminMainProps {}
+interface AdminMainProps {
+}
 
 const AdminMain = (props: AdminMainProps) => {
-    const [data, setData] = useState({});
     const {appStore} = useContext(Context);
 
-    useEffect(() => {
-        sendRequest();
-    }, []);
-
-    const sendRequest = () => {
-        appStore.authRequest({
-            url: appStore.backEnd.apiServiceControllerGetExample,
-            method: "GET"
-        }).then(res => console.log(res)).catch(e => console.log(e));
-    }
-
-    const logout = ():void => {
-        appStore.simpleRequest({
-            url: appStore.backEnd.authApiLogoutUrl,
-            method: "POST",
-            data: {
-                token: appStore.token,
-            }
-        }).then(res => console.log("RES: ", res)).catch(e => console.log("Error: ", e));
-    }
-
-    function unAuth() {
-        appStore.setToken(appStore.token + "222");
-        sendRequest();
-    }
 
     return (
-        <Container>
-            <h1>AdminMain</h1>
+        <Container fluid className={`AdminMain`}>
+            <h1>Административная панель</h1>
+            <Container fluid className={`AdminMain__cards d-flex justify-content-start align-items-start`}>
+                {appStore.routes.adminLinks.urls.map((route, index) => {
+                    if (!!route.icon) return (
+                        <Card key={index} className={`AdminMain__card`}>
+                            <Card.Body>
+                                <Container
+                                    fluid
+                                    className={`AdminMain__cardIcon d-flex justify-content-center align-items-center`}
+                                >
+                                    {route.icon}
+                                </Container>
 
-            <Button onClick={() => sendRequest()}>getAuthApi</Button>
-            <Button variant={"dark"} onClick={() => unAuth()}>unAuth</Button>
-            <Button variant={"danger"} onClick={() => logout()}>logout</Button>
+                                <Container
+                                    fluid
+                                    className={`AdminMain__cardTitle d-flex justify-content-center align-items-center`}
+                                >
+                                    <Card.Title>{route.title}</Card.Title>
+                                </Container>
+
+
+                                <Container
+                                    fluid
+                                    className={`AdminMain__cardButton d-flex justify-content-end align-items-center`}
+                                >
+                                    <NavLink
+                                        to={appStore.routes.adminLinks.node + route.url}
+                                    >
+                                        <Button variant="primary">Перейти</Button>
+                                    </NavLink>
+                                </Container>
+                            </Card.Body>
+                        </Card>
+                    );
+                })}
+            </Container>
         </Container>
     )
 }
 
-export default AdminMain
+export default AdminMain;

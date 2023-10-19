@@ -7,6 +7,7 @@ import Second from "../Pages/Second/Second";
 import TestPage from "../Pages/TestPage/TestPage";
 import AdminMain from "../Pages/AdminMain/AdminMain";
 import AdminUsers from "../Pages/AdminUsers/AdminUsers";
+import {Icon} from "../Components/Icon";
 
 const adminNode = '/admin/'
 const superUserNode = '/superuser/'
@@ -28,6 +29,7 @@ const LinkListData: LinkListInterface = {
             {
                 title: 'Работа с пользователями',
                 url: 'users',
+                icon: <Icon iconName={"PeopleFill"}/>,
                 component: <AdminUsers />
             },
             // {

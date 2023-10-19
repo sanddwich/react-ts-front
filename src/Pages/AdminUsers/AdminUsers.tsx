@@ -25,8 +25,11 @@ const AdminUsers = (props: AdminUsersProps) => {
     const [accessRolesModal, setAccessRolesModal] = useState<boolean>(false);
     const [user, setUser] = useState<User | undefined>(undefined);
     const [success, setSuccess] = useState<string>("");
+    const [warning, setWarning] = useState<string>("");
     const [formMode, setFormMode] = useState<AddUpdateType>("ADD");
     const [userAccessRoleCopy, setUserAccessRoleCopy] = useState<Array<AccessRole>>([]);
+    const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
+    const [search, setSearch] = useState<string>("");
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -42,6 +45,13 @@ const AdminUsers = (props: AdminUsersProps) => {
         setSuccess(message);
         setTimeout(() => {
             setSuccess("");
+        }, 5000);
+    }
+
+    const showWarning = (message: string) => {
+        setWarning(message);
+        setTimeout(() => {
+            setWarning("");
         }, 5000);
     }
 
@@ -118,6 +128,21 @@ const AdminUsers = (props: AdminUsersProps) => {
         setLoader(false);
     }
 
+    const deleteButtonClickHandler = async (user: User):Promise<any> => {
+        setShowDeleteModal(false);
+        setLoader(true);
+        await deleteUser(user);
+        setLoader(false);
+    }
+
+    const searchClickHandler = async ():Promise<any> => {
+        setLoader(true);
+        await searchUsers(search);
+        setSearch("");
+
+        setLoader(false);
+    }
+
     const getAllUsers = async (): Promise<AxiosResponse> => {
         const res = await appStore.restApiUserController.getAll(appStore.token);
         if (!!res.status) {
@@ -170,8 +195,44 @@ const AdminUsers = (props: AdminUsersProps) => {
         return res;
     }
 
-    function deleteUser(user: User) {
+    const deleteUser = async(user: User): Promise<any> => {
+        const res = await appStore.restApiUserController.delete(appStore.token, user);
+        if (!!res.status) {
+            if (res.status == 200) {
+                console.log(res.data);
+                showWarning("Пользователь '" + user.username + "' удален!");
+                await getAllUsers();
+            }
 
+            if (res.status == 404) {
+                showError("Ошибка обращения API");
+                !!res.data.error && console.warn("Ошибка обращения API: ", res.data.error);
+            }
+        }
+
+        return res;
+    }
+
+    const searchUsers = async (val: string): Promise<any> => {
+        const res = await appStore.restApiUserController.find(appStore.token, val);
+        if (!!res.status) {
+            if (res.status == 200) {
+                console.log(res.data);
+                if (!!res.data.users.length) {
+                    setUsers(res.data.users);
+                } else {
+                    setUsers([]);
+                    showWarning("Пользователей по указанному запросу не найдено!")
+                }
+            }
+
+            if (res.status == 404) {
+                showError("Ошибка обращения API");
+                !!res.data.error && console.warn("Ошибка обращения API: ", res.data.error);
+            }
+        }
+
+        return res;
     }
 
     function updateUserButtonClickHandler(user: User) {
@@ -201,20 +262,26 @@ const AdminUsers = (props: AdminUsersProps) => {
     }
 
     function deleteButtonClick(user: User) {
-
+        setUser(user);
+        setShowDeleteModal(true);
     }
     
     const keyUpHandler = (val: string):void => {
-        
-    }
-
-    const searchClickHandler = ():void => {
-
+        setSearch(val);
     }
 
     const closeUserForm = ():void => {
         if (!!user?.accessRoles) user.accessRoles = userAccessRoleCopy;
         setShow(false);
+    }
+
+    const onCloseDeleteModal = ():void => {
+        setShowDeleteModal(false);
+    }
+
+    const applyDeleteUser = ():void => {
+        if (!!user) deleteButtonClickHandler(user)
+            .finally();
     }
 
     return (
@@ -230,6 +297,20 @@ const AdminUsers = (props: AdminUsersProps) => {
                     buttonClickHandler={formButtonClickHandler}
                     formMode={formMode}
                 />
+            </CustomModal>
+
+            <CustomModal
+                title={`Удаление пользователя`}
+                show={showDeleteModal}
+                handleClose={onCloseDeleteModal}
+                keyboard={false}
+                applyButton={true}
+                applyButtonFunction={applyDeleteUser}
+            >
+                <p>
+                {`Вы действительно хотите удалить пользователя 
+                ${user?.username} [${user?.email}]?`}
+                </p>
             </CustomModal>
 
             {/*<CustomModal*/}
@@ -252,6 +333,7 @@ const AdminUsers = (props: AdminUsersProps) => {
                 <>
                     {!!error && <MessageComponent message={error} variant={"danger"}/>}
                     {!!success && <MessageComponent message={success} variant={"success"}/>}
+                    {!!warning && <MessageComponent message={warning} variant={"warning"}/>}
                     <h3>Работа с пользователями:</h3>
 
                     <Container fluid className={`AdminUsers__search p-0 d-flex align-items-end`}>
@@ -291,7 +373,16 @@ const AdminUsers = (props: AdminUsersProps) => {
                             {users.map(user => (
                                 <Accordion.Item key={user.id} eventKey={user.username}>
                                     <Accordion.Header
-                                        className={`AdminUsers__headers`}>{user.username}</Accordion.Header>
+                                        className={`AdminUsers__headers`}
+                                    >
+                                        {`${user.username}:`}
+                                        <i className={`AdminUsers__headersI`}>{`[${user.email}]`}</i>
+                                        <div className={`AdminUsers__badge`}>
+                                            {!!user.active
+                                            ? (<Badge bg={"success"}>Активен</Badge>)
+                                            : (<Badge bg={"danger"}>Не активен</Badge>)}
+                                        </div>
+                                    </Accordion.Header>
                                     <Accordion.Body>
                                         <Table>
                                             <tbody>

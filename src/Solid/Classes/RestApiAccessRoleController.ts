@@ -69,6 +69,11 @@ export default class RestApiAccessRoleController implements RestApiControllerInt
         return undefined;
     }
 
+    // @ts-ignore
+    find(token: string, searchTerm: string): Promise<AxiosResponse> {
+
+    }
+
     addAuthHeaders = (axiosRequestConfig: AxiosRequestConfig, token: string): AxiosRequestConfig => {
         const authHeaders = {
             "Authorization": "Bearer " + token,

@@ -8,4 +8,5 @@ export default interface RestApiControllerInterface<T> {
     update: (token: string, object: T) => Promise<AxiosResponse>
     delete: (token: string, object: T) => Promise<AxiosResponse>
     addAuthHeaders: (axiosRequestConfig: AxiosRequestConfig, token: string) => AxiosRequestConfig
+    find: (token: string, searchTerm: string) => Promise<AxiosResponse>
 }

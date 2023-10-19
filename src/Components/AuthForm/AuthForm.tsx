@@ -8,7 +8,7 @@ import {Context} from "../../index";
 import Loader from "../Loader/Loader";
 
 interface AuthFormInterface {
-    buttonClickHandler: (authData: AuthRequestInterface) => void
+    showError: (message: string) => void
 }
 
 const AuthForm = (props: AuthFormInterface) => {
@@ -28,6 +28,13 @@ const AuthForm = (props: AuthFormInterface) => {
         if (res.status == 200) {
             appStore.authDefaultSettings(res.data.token);
             return true;
+        }
+
+        if (res.status == 404) {
+            try {
+                props.showError(res.data.error.response.data.message);
+            } catch (e) {}
+            !!res.data.error && console.warn("Ошибка обращения API: ", res.data.error);
         }
 
         return false;

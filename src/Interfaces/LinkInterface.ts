@@ -3,4 +3,5 @@ export default interface LinkInterface {
     title: string
     index?: boolean
     component: JSX.Element
+    icon?: JSX.Element
 }

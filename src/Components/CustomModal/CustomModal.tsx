@@ -9,6 +9,8 @@ interface CustomModalProps {
     keyboard: boolean
     backdrop?: boolean | "static" | undefined
     children: JSX.Element
+    applyButton?: boolean
+    applyButtonFunction?: () => void
 }
 
 const CustomModal = (props: CustomModalProps) => {
@@ -30,6 +32,11 @@ const CustomModal = (props: CustomModalProps) => {
                     {props.children}
                 </Modal.Body>
                 <Modal.Footer className={`CustomModal__footer`}>
+                    {!!props.applyButton && (
+                        <Button variant="danger" onClick={props.applyButtonFunction}>
+                            Применить
+                        </Button>
+                    )}
                     <Button variant="secondary" onClick={props.handleClose}>
                         Отмена
                     </Button>
