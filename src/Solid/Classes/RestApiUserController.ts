@@ -89,7 +89,7 @@ export default class RestApiUserController implements RestApiControllerInterface
 
     async update(token: string, object: User): Promise<AxiosResponse> {
         const axiosRequestConfig: AxiosRequestConfig = {
-            url: BackEndData.restApiUsersPoint + '/' + object.id,
+            url: BackEndData.restApiUsersPoint + '/patch',
             method: "PATCH",
             headers: {},
             data: {

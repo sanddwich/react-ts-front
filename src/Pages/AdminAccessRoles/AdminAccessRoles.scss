@@ -1,0 +1,48 @@
+.AdminAccessRoles {
+  padding-top: 10px;
+  padding-bottom: 20px;
+  width: 100%;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+
+  .AdminAccessRoles__search {
+    margin-bottom: 10px;
+
+    .AdminAccessRoles__searchTextField {
+      width: 300px;
+    }
+  }
+
+  .AdminAccessRoles__headersI {
+    font-weight: normal;
+    margin-left: 5px;
+  }
+
+  .AdminAccessRoles__badge {
+    margin-left: 5px;
+    margin-top: 3px;
+  }
+
+  .AdminAccessRoles__buttonImg {
+    margin-top: -2px;
+    margin-right: 5px;
+  }
+
+  .AdminAccessRoles__group {
+    margin-right: 5px;
+  }
+
+  .AdminAccessRoles__headers {
+
+    button {
+      font-weight: bold;
+      background-color: #adb5bd;
+    }
+  }
+
+  .AdminAccessRoles__button {
+    margin-right: 5px;
+  }
+}
