@@ -1,0 +1,17 @@
+.AccessRoleForm {
+  padding: 0;
+
+  .AccessRoleForm__group {
+    padding-bottom: 10px;
+  }
+
+  .AccessRoleForm__buttonCont {
+    display: flex;
+    justify-content: right;
+    align-items: center;
+  }
+
+  .AccessRoleForm__muted {
+    color: #a52a2a !important;
+  }
+}

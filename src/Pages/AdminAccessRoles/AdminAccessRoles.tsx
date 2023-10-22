@@ -8,6 +8,10 @@ import {AxiosResponse} from "axios";
 import {Context} from "../../index";
 import {Icon} from "../../Components/Icon";
 import AccessRole from "../../Solid/Entities/AccessRole";
+import UserForm from "../../Components/UserForm/UserForm";
+import CustomModal from "../../Components/CustomModal/CustomModal";
+import AccessRoleForm from "../../Components/AccessRoleForm/AccessRoleForm";
+import Privilege from "../../Solid/Entities/Privilege";
 
 interface AdminAccessRolesProps {
 }
@@ -19,6 +23,10 @@ const AdminAccessRoles = (props: AdminAccessRolesProps) => {
     const [loader, setLoader] = useState<boolean>(true);
     const [search, setSearch] = useState<string>("");
     const {appStore} = useContext(Context);
+    const [accessRole, setAccessRole] = useState<AccessRole>(AccessRole.getEmptyAccessRole());
+    const [accessRoleForm, setAccessRoleForm] = useState<boolean>(false);
+    const [deleteForm, setDeleteForm] = useState<boolean>(false);
+    const [privilegesListBack, setPrivilegesListBack] = useState<Array<Privilege>>([]);
 
     const showError = (message: string) => {
         setError(message);
@@ -100,15 +108,37 @@ const AdminAccessRoles = (props: AdminAccessRolesProps) => {
     }
     
     const updateFromActivate = (role: AccessRole): void => {
-
+        setAccessRole(role);
+        setPrivilegesListBack(role.privileges.slice(0));
+        setAccessRoleForm(true);
     }
 
     const deleteFromActivate = (role: AccessRole): void => {
+        setAccessRole(role);
+    }
 
+    const applyAccessRoleFormClick = (role: AccessRole) => {
+
+    }
+
+    function onCloseAccessRoleFormHandler() {
+        accessRole.privileges = privilegesListBack;
+        setAccessRoleForm(false);
     }
 
     return (
         <Container fluid className={`AdminAccessRoles`}>
+            <CustomModal
+                title={"Роль"}
+                show={accessRoleForm}
+                handleClose={() => onCloseAccessRoleFormHandler()}
+                keyboard={false}
+            >
+                <AccessRoleForm
+                    accessRole={accessRole}
+                    buttonFunction={applyAccessRoleFormClick}
+                />
+            </CustomModal>
             {loader ? (
                 <FullScreenLoader>
                     <Loader/>
@@ -175,7 +205,7 @@ const AdminAccessRoles = (props: AdminAccessRolesProps) => {
                                                 </tr>
                                                 <tr>
                                                     <td>Role Description</td>
-                                                    <td>{!!role.code && role.code}</td>
+                                                    <td>{!!role.description && role.description}</td>
                                                 </tr>
                                                 <tr>
                                                     <td>Actions</td>
