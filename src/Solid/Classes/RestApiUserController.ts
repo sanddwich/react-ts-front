@@ -49,14 +49,9 @@ export default class RestApiUserController implements RestApiControllerInterface
         );
     }
 
-    async get(token: string): Promise<AxiosResponse> {
-        // @ts-ignore
-        return undefined;
-    }
-
-    async getAll(token: string): Promise<AxiosResponse> {
+    async get(token: string, id: string): Promise<AxiosResponse> {
         const axiosRequestConfig: AxiosRequestConfig = {
-            url: BackEndData.restApiUsersPoint + '/get_all',
+            url: BackEndData.restApiUsersPoint + '/get/' + id,
             method: "GET",
             headers: {}
         }
@@ -66,15 +61,11 @@ export default class RestApiUserController implements RestApiControllerInterface
         );
     }
 
-    async find(token: string, searchTerm: string): Promise<AxiosResponse> {
-        const requestSearchData: RequestSearchData = new RequestSearchData(searchTerm);
+    async getAll(token: string): Promise<AxiosResponse> {
         const axiosRequestConfig: AxiosRequestConfig = {
-            url: BackEndData.restApiUsersPoint + '/find',
-            method: "POST",
-            headers: {},
-            data: {
-                ...requestSearchData
-            }
+            url: BackEndData.restApiUsersPoint + '/get_all',
+            method: "GET",
+            headers: {}
         }
 
         return await this.apiService.request(
@@ -96,6 +87,22 @@ export default class RestApiUserController implements RestApiControllerInterface
                 ...object
             }
 
+        }
+
+        return await this.apiService.request(
+            this.addAuthHeaders(axiosRequestConfig, token)
+        );
+    }
+
+    async find(token: string, searchTerm: string): Promise<AxiosResponse> {
+        const requestSearchData: RequestSearchData = new RequestSearchData(searchTerm);
+        const axiosRequestConfig: AxiosRequestConfig = {
+            url: BackEndData.restApiUsersPoint + '/find',
+            method: "POST",
+            headers: {},
+            data: {
+                ...requestSearchData
+            }
         }
 
         return await this.apiService.request(

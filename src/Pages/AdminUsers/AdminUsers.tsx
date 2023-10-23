@@ -163,7 +163,6 @@ const AdminUsers = (props: AdminUsersProps) => {
         const res = await appStore.restApiUserController.create(appStore.token, user);
         if (!!res.status) {
             if (res.status == 200) {
-                console.log(res.data);
                 showSuccess("Новый пользователь '" + user.username + "' создан!");
                 await getAllUsers();
             }
@@ -181,7 +180,6 @@ const AdminUsers = (props: AdminUsersProps) => {
         const res = await appStore.restApiUserController.update(appStore.token, user);
         if (!!res.status) {
             if (res.status == 200) {
-                console.log(res.data);
                 showSuccess("Пользователь '" + user.username + "' обновлен!");
                 await getAllUsers();
             }
@@ -199,7 +197,6 @@ const AdminUsers = (props: AdminUsersProps) => {
         const res = await appStore.restApiUserController.delete(appStore.token, user);
         if (!!res.status) {
             if (res.status == 200) {
-                console.log(res.data);
                 showWarning("Пользователь '" + user.username + "' удален!");
                 await getAllUsers();
             }

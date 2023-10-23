@@ -12,6 +12,7 @@ import UserForm from "../../Components/UserForm/UserForm";
 import CustomModal from "../../Components/CustomModal/CustomModal";
 import AccessRoleForm from "../../Components/AccessRoleForm/AccessRoleForm";
 import Privilege from "../../Solid/Entities/Privilege";
+import User from "../../Solid/Entities/User";
 
 interface AdminAccessRolesProps {
 }
@@ -23,6 +24,7 @@ const AdminAccessRoles = (props: AdminAccessRolesProps) => {
     const [loader, setLoader] = useState<boolean>(true);
     const [search, setSearch] = useState<string>("");
     const {appStore} = useContext(Context);
+    const [accessRoleList, setAccessRoleList] = useState<Array<AccessRole>>([]);
     const [accessRole, setAccessRole] = useState<AccessRole>(AccessRole.getEmptyAccessRole());
     const [accessRoleForm, setAccessRoleForm] = useState<boolean>(false);
     const [deleteForm, setDeleteForm] = useState<boolean>(false);
@@ -83,6 +85,7 @@ const AdminAccessRoles = (props: AdminAccessRolesProps) => {
         const res = await appStore.restApiAccessRoleController.getAll(appStore.token);
         if (!!res.status) {
             if (res.status == 200) {
+                setAccessRoleList(res.data.accessRoles)
                 appStore.setAccessRoles(res.data.accessRoles);
             }
 
@@ -115,15 +118,97 @@ const AdminAccessRoles = (props: AdminAccessRolesProps) => {
 
     const deleteFromActivate = (role: AccessRole): void => {
         setAccessRole(role);
+        setDeleteForm(true);
     }
 
     const applyAccessRoleFormClick = (role: AccessRole) => {
 
     }
 
+    const applyUpdateAccessRole = () => {
+
+    }
+
+    const applyDeleteAccessRole = () => {
+
+    }
+
+    const onCloseDeleteModalHandler = ():void => {
+
+    }
+
     function onCloseAccessRoleFormHandler() {
         accessRole.privileges = privilegesListBack;
         setAccessRoleForm(false);
+    }
+
+    const addAccessRole = async (accessRole: AccessRole): Promise<AxiosResponse> => {
+        const res = await appStore.restApiAccessRoleController.create(appStore.token, accessRole);
+        if (!!res.status) {
+            if (res.status == 200) {
+                showSuccess("Новая роль '" + accessRole.code + "' создана!");
+            }
+
+            if (res.status == 404) {
+                showError("Ошибка обращения API");
+                !!res.data.error && console.warn("Ошибка обращения API: ", res.data.error);
+            }
+        }
+
+        return res;
+    }
+
+    const updateAccessRole = async (accessRole: AccessRole): Promise<AxiosResponse> => {
+        const res = await appStore.restApiAccessRoleController.update(appStore.token, accessRole);
+        if (!!res.status) {
+            if (res.status == 200) {
+                showSuccess("Роль '" + accessRole.code + "' обновлена!");
+            }
+
+            if (res.status == 404) {
+                showError("Ошибка обращения API");
+                !!res.data.error && console.warn("Ошибка обращения API: ", res.data.error);
+            }
+        }
+
+        return res;
+    }
+
+    const deleteAccessRole = async(accessRole: AccessRole): Promise<any> => {
+        const res = await appStore.restApiAccessRoleController.delete(appStore.token, accessRole);
+        if (!!res.status) {
+            if (res.status == 200) {
+                showWarning("Роль '" + accessRole.code + "' удалена!");
+            }
+
+            if (res.status == 404) {
+                showError("Ошибка обращения API");
+                !!res.data.error && console.warn("Ошибка обращения API: ", res.data.error);
+            }
+        }
+
+        return res;
+    }
+
+    const searchAccessRoles = async (val: string): Promise<any> => {
+        const res = await appStore.restApiAccessRoleController.find(appStore.token, val);
+        if (!!res.status) {
+            if (res.status == 200) {
+                if (!!res.data.accessRoles.length) {
+                    setAccessRoleList(res.data.accessRoles);
+                } else {
+                    setAccessRoleList([]);
+                    showWarning("Ролей по указанному запросу не найдено!")
+                }
+            }
+
+            if (res.status == 404) {
+                showError("Ошибка обращения API");
+                !!res.data.error && console.warn("Ошибка обращения API: ", res.data.error);
+            }
+        }
+
+        return res;
     }
 
     return (
@@ -133,12 +218,28 @@ const AdminAccessRoles = (props: AdminAccessRolesProps) => {
                 show={accessRoleForm}
                 handleClose={() => onCloseAccessRoleFormHandler()}
                 keyboard={false}
+                applyButtonFunction={applyUpdateAccessRole}
             >
                 <AccessRoleForm
                     accessRole={accessRole}
                     buttonFunction={applyAccessRoleFormClick}
                 />
             </CustomModal>
+
+            <CustomModal
+                title={`Удаление роли`}
+                show={deleteForm}
+                handleClose={() => onCloseDeleteModalHandler()}
+                keyboard={false}
+                applyButton={true}
+                applyButtonFunction={applyDeleteAccessRole}
+            >
+                <p>
+                    {`Вы действительно хотите удалить роль 
+                    ${accessRole.code}?`}
+                </p>
+            </CustomModal>
+
             {loader ? (
                 <FullScreenLoader>
                     <Loader/>
@@ -182,10 +283,10 @@ const AdminAccessRoles = (props: AdminAccessRolesProps) => {
                         </Form.Group>
                     </Container>
 
-                    {!!appStore.accessRoles.length
+                    {!!accessRoleList.length
                         ? (
                             <Accordion defaultActiveKey="0">
-                                {appStore.accessRoles.map(role => (
+                                {accessRoleList.map(role => (
                                     <Accordion.Item key={role.id} eventKey={role.code}>
                                         <Accordion.Header
                                             className={`AdminAccessRoles__headers`}

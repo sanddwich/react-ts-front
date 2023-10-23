@@ -30,7 +30,7 @@ const AddPrivilegeForm = (props: AddPrivilegeFormProps) => {
     }
 
     useEffect(() => {
-        console.log(additionalPrivileges);
+        // console.log(additionalPrivileges);
     }, [])
 
     const keyUpHandler = (val: string): void => {
