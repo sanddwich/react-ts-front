@@ -301,7 +301,6 @@ const AdminUsers = (props: AdminUsersProps) => {
                 show={showDeleteModal}
                 handleClose={onCloseDeleteModal}
                 keyboard={false}
-                applyButton={true}
                 applyButtonFunction={applyDeleteUser}
             >
                 <p>

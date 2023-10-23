@@ -13,6 +13,7 @@ import CustomModal from "../../Components/CustomModal/CustomModal";
 import AccessRoleForm from "../../Components/AccessRoleForm/AccessRoleForm";
 import Privilege from "../../Solid/Entities/Privilege";
 import User from "../../Solid/Entities/User";
+import {AddUpdateType} from "../../Interfaces/AddUpdateType";
 
 interface AdminAccessRolesProps {
 }
@@ -29,6 +30,7 @@ const AdminAccessRoles = (props: AdminAccessRolesProps) => {
     const [accessRoleForm, setAccessRoleForm] = useState<boolean>(false);
     const [deleteForm, setDeleteForm] = useState<boolean>(false);
     const [privilegesListBack, setPrivilegesListBack] = useState<Array<Privilege>>([]);
+    const [formMode, setFormMode] = useState<AddUpdateType>("ADD");
 
     const showError = (message: string) => {
         setError(message);
@@ -102,16 +104,23 @@ const AdminAccessRoles = (props: AdminAccessRolesProps) => {
         setSearch(val);
     }
 
-    const searchClickHandler = (): void => {
-
+    const searchClickHandler = async ():Promise<any> => {
+        if (!!search && search.length > 2) {
+            await searchAccessRoles(search);
+        } else {
+            await getAllData();
+        }
     }
 
-    const addUserButtonClickHandler = (): void => {
-
+    const addFromActivate = (): void => {
+        setAccessRole(AccessRole.getEmptyAccessRole());
+        setFormMode("ADD");
+        setAccessRoleForm(true);
     }
     
     const updateFromActivate = (role: AccessRole): void => {
         setAccessRole(role);
+        setFormMode("UPDATE");
         setPrivilegesListBack(role.privileges.slice(0));
         setAccessRoleForm(true);
     }
@@ -125,16 +134,32 @@ const AdminAccessRoles = (props: AdminAccessRolesProps) => {
 
     }
 
-    const applyUpdateAccessRole = () => {
+    const applyUpdateAccessRole = async ():Promise<any> => {
+        setAccessRoleForm(false);
+        setLoader(true);
 
+        if (!!accessRole && formMode == "UPDATE") {
+            await updateAccessRole(AccessRole.toUppercaseAccessRoleData(accessRole));
+        } else if (!!accessRole && formMode == "ADD") {
+            await addAccessRole(AccessRole.toUppercaseAccessRoleData(accessRole));
+        }
+
+        await getAllData();
+        setLoader(false);
     }
 
-    const applyDeleteAccessRole = () => {
-
+    const applyDeleteAccessRole = async ():Promise<any> => {
+        if (!!accessRole) {
+            setDeleteForm(false);
+            setLoader(true);
+            await deleteAccessRole(accessRole);
+            await getAllData();
+            setLoader(false);
+        }
     }
 
     const onCloseDeleteModalHandler = ():void => {
-
+        setDeleteForm(false);
     }
 
     function onCloseAccessRoleFormHandler() {
@@ -218,11 +243,10 @@ const AdminAccessRoles = (props: AdminAccessRolesProps) => {
                 show={accessRoleForm}
                 handleClose={() => onCloseAccessRoleFormHandler()}
                 keyboard={false}
-                applyButtonFunction={applyUpdateAccessRole}
             >
                 <AccessRoleForm
                     accessRole={accessRole}
-                    buttonFunction={applyAccessRoleFormClick}
+                    applyButtonFunction={applyUpdateAccessRole}
                 />
             </CustomModal>
 
@@ -231,7 +255,6 @@ const AdminAccessRoles = (props: AdminAccessRolesProps) => {
                 show={deleteForm}
                 handleClose={() => onCloseDeleteModalHandler()}
                 keyboard={false}
-                applyButton={true}
                 applyButtonFunction={applyDeleteAccessRole}
             >
                 <p>
@@ -275,7 +298,7 @@ const AdminAccessRoles = (props: AdminAccessRolesProps) => {
                             <Button
                                 variant={"primary"}
                                 className={`AdminAccessRoles__button`}
-                                onClick={() => addUserButtonClickHandler()}
+                                onClick={() => addFromActivate()}
                             >
                                 <Icon className={`AdminAccessRoles__buttonImg`} iconName={"PersonFillAdd"} />
                                 Добавить новую роль

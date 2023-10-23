@@ -1,13 +1,15 @@
 import React from 'react';
 import './AccessRoleForm.scss';
-import {Container, Form} from "react-bootstrap";
+import {Button, Container, Form} from "react-bootstrap";
 import AccessRole from "../../Solid/Entities/AccessRole";
 import {useForm} from "react-hook-form";
 import AddPrivilegeForm from "../AddPrivilegeForm/AddPrivilegeForm";
+import AddAccessRolesForm from "../AddAccessRolesForm/AddAccessRolesForm";
+import Loader from "../Loader/Loader";
 
 interface AccessRoleFormProps {
     accessRole: AccessRole
-    buttonFunction: (accessRole: AccessRole) => void
+    applyButtonFunction?: () => Promise<any>
 }
 
 const AccessRoleForm = (props: AccessRoleFormProps) => {
@@ -19,6 +21,17 @@ const AccessRoleForm = (props: AccessRoleFormProps) => {
         resetField,
         formState: {errors},
     } = useForm<AccessRole>({})
+
+    const buttonClickHandler = (data: AccessRole):void => {
+        updatePropsAccessRole(data);
+        !!props.applyButtonFunction && props.applyButtonFunction();
+    }
+
+    const updatePropsAccessRole = (accessRole: AccessRole): void => {
+        props.accessRole.code = accessRole.code;
+        props.accessRole.name = accessRole.name;
+        props.accessRole.description = accessRole.description;
+    }
 
     return (
         <Container fluid className={`AccessRoleForm`}>
@@ -35,11 +48,19 @@ const AccessRoleForm = (props: AccessRoleFormProps) => {
                                 message: 'Недостаточное кол-во символов. Минимальное: ' + minLength,
                             },
                             pattern: {
-                                value: /^[a-zA-Zа-яА-Я-_]+$/i,
-                                message: 'Недопустимые символы. Доступн только латинские, кириллица и цифры',
+                                value: /^[a-zA-Zа-яА-Я0-9-_]+$/i,
+                                message: 'Недопустимые символы. Доступны только латинские, кириллица и цифры',
                             },
                         })}
                     />
+                    {errors.code && (
+                        <Form.Text
+                            className={`AccessRoleForm__muted text-muted`}
+                            // onKeyUp={event => loginKeyUpHandler()}
+                        >
+                            {errors.code.message}
+                        </Form.Text>
+                    )}
                 </Form.Group>
                 <Form.Group className={`AccessRoleForm__group`} controlId="formName">
                     <Form.Control
@@ -53,11 +74,19 @@ const AccessRoleForm = (props: AccessRoleFormProps) => {
                                 message: 'Недостаточное кол-во символов. Минимальное: ' + minLength,
                             },
                             pattern: {
-                                value: /^[a-zA-Zа-яА-Я-_]+$/i,
-                                message: 'Недопустимые символы. Доступн только латинские, кириллица и цифры',
+                                value: /^[a-zA-Zа-яА-Я0-9-_]+$/i,
+                                message: 'Недопустимые символы. Доступны только латинские, кириллица и цифры',
                             },
                         })}
                     />
+                    {errors.name && (
+                        <Form.Text
+                            className={`AccessRoleForm__muted text-muted`}
+                            // onKeyUp={event => loginKeyUpHandler()}
+                        >
+                            {errors.name.message}
+                        </Form.Text>
+                    )}
                 </Form.Group>
                 <Form.Group className={`AccessRoleForm__group`} controlId="formDescription">
                     <Form.Control
@@ -69,11 +98,37 @@ const AccessRoleForm = (props: AccessRoleFormProps) => {
                             minLength: {
                                 value: minLength,
                                 message: 'Недостаточное кол-во символов. Минимальное: ' + minLength,
-                            }
+                            },
+                            pattern: {
+                                value: /^[a-zA-Zа-яА-Я0-9-_\s]+$/i,
+                                message: 'Недопустимые символы. Доступны только латинские, кириллица и цифры',
+                            },
                         })}
                     />
+                    {errors.description && (
+                        <Form.Text
+                            className={`AccessRoleForm__muted text-muted`}
+                            // onKeyUp={event => loginKeyUpHandler()}
+                        >
+                            {errors.description.message}
+                        </Form.Text>
+                    )}
                 </Form.Group>
-                <AddPrivilegeForm accessRole={props.accessRole} />
+
+                <AddPrivilegeForm accessRole={props.accessRole}/>
+
+                {!!props.applyButtonFunction && (
+                    <Form.Group className={`AccessRoleForm__buttonCont`} controlId={`formBasicButton`}>
+                        <Button
+                            className={`AccessRoleForm__button`}
+                            variant="primary"
+                            type="button"
+                            onClick={handleSubmit((data) => buttonClickHandler(data))}
+                        >
+                            Применить
+                        </Button>
+                    </Form.Group>
+                )}
             </Form>
         </Container>
     );

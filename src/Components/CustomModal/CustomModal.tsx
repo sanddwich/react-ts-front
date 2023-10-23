@@ -1,6 +1,7 @@
 import React from 'react'
 import './CustomModal.scss'
 import {Button, Modal} from "react-bootstrap";
+import {ButtonVariant} from "react-bootstrap/types";
 
 interface CustomModalProps {
     title: string
@@ -9,8 +10,8 @@ interface CustomModalProps {
     keyboard: boolean
     backdrop?: boolean | "static" | undefined
     children: JSX.Element
-    applyButton?: boolean
     applyButtonFunction?: () => void
+    applyButtonVariant?: ButtonVariant
 }
 
 const CustomModal = (props: CustomModalProps) => {
@@ -32,8 +33,11 @@ const CustomModal = (props: CustomModalProps) => {
                     {props.children}
                 </Modal.Body>
                 <Modal.Footer className={`CustomModal__footer`}>
-                    {!!props.applyButton && (
-                        <Button variant="danger" onClick={props.applyButtonFunction}>
+                    {!!props.applyButtonFunction && (
+                        <Button
+                            variant={!!props.applyButtonVariant ? props.applyButtonVariant : "danger"}
+                            onClick={props.applyButtonFunction}
+                        >
                             Применить
                         </Button>
                     )}
