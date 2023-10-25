@@ -214,7 +214,6 @@ const AdminUsers = (props: AdminUsersProps) => {
         const res = await appStore.restApiUserController.find(appStore.token, val);
         if (!!res.status) {
             if (res.status == 200) {
-                console.log(res.data);
                 if (!!res.data.users.length) {
                     setUsers(res.data.users);
                 } else {

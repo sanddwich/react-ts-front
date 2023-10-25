@@ -9,6 +9,7 @@ import AdminMain from "../Pages/AdminMain/AdminMain";
 import AdminUsers from "../Pages/AdminUsers/AdminUsers";
 import {Icon} from "../Components/Icon";
 import AdminAccessRoles from "../Pages/AdminAccessRoles/AdminAccessRoles";
+import AdminPrivilege from "../Pages/AdminPrivilege/AdminPrivilege";
 
 const adminNode = '/admin/'
 const superUserNode = '/superuser/'
@@ -38,6 +39,12 @@ const LinkListData: LinkListInterface = {
                 url: 'access_roles',
                 icon: <Icon iconName={"PersonFillLock"}/>,
                 component: <AdminAccessRoles />
+            },
+            {
+                title: 'Работа с привилегиями',
+                url: 'privileges',
+                icon: <Icon iconName={"PersonLinesFill"}/>,
+                component: <AdminPrivilege />
             },
             // {
             //     title: 'Admin accessRoles',

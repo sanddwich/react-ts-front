@@ -14,7 +14,7 @@ const AdminMain = (props: AdminMainProps) => {
     return (
         <Container fluid className={`AdminMain`}>
             <h1>Административная панель</h1>
-            <Container fluid className={`AdminMain__cards d-flex justify-content-start align-items-start`}>
+            <Container fluid className={`AdminMain__cards d-flex flex-wrap justify-content-start align-items-start`}>
                 {appStore.routes.adminLinks.urls.map((route, index) => {
                     if (!!route.icon) return (
                         <Card key={index} className={`AdminMain__card`}>

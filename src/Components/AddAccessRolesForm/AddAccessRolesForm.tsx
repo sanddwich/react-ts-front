@@ -99,7 +99,7 @@ const AddAccessRolesForm = (props: AddAccessRolesFormProps) => {
 
             <Form.Group className={`AddAccessRolesForm__userRolesList`} controlId="formAddedRoleCodes">
                 <Form.Label className={`AddAccessRolesForm__label`}>Роли пользователя:</Form.Label>
-                <Container fluid className={`AddAccessRolesForm__Roles p-0 d-flex`}>
+                <Container fluid className={`AddAccessRolesForm__Roles p-0 d-flex flex-wrap`}>
                     {props.user?.accessRoles.map((role) => (
                         <div key={role.code} onClick={() => userRoleClickHandler(role)}>
                             <CustomBadge

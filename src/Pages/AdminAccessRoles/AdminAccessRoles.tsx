@@ -105,11 +105,13 @@ const AdminAccessRoles = (props: AdminAccessRolesProps) => {
     }
 
     const searchClickHandler = async ():Promise<any> => {
+        setLoader(true);
         if (!!search && search.length > 2) {
             await searchAccessRoles(search);
         } else {
             await getAllData();
         }
+        setLoader(false);
     }
 
     const addFromActivate = (): void => {
@@ -221,6 +223,7 @@ const AdminAccessRoles = (props: AdminAccessRolesProps) => {
             if (res.status == 200) {
                 if (!!res.data.accessRoles.length) {
                     setAccessRoleList(res.data.accessRoles);
+                    setSearch("");
                 } else {
                     setAccessRoleList([]);
                     showWarning("Ролей по указанному запросу не найдено!")

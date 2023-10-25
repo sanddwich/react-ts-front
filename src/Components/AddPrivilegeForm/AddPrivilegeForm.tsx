@@ -90,7 +90,7 @@ const AddPrivilegeForm = (props: AddPrivilegeFormProps) => {
 
             <Form.Group className={`AddPrivilegeForm__userRolesList`} controlId="formAddedRoleCodes">
                 <Form.Label className={`AddPrivilegeForm__label`}>Привилегии роли:</Form.Label>
-                <Container fluid className={`AddPrivilegeForm__Roles p-0 d-flex`}>
+                <Container fluid className={`AddPrivilegeForm__Roles p-0 d-flex flex-wrap`}>
                     {props.accessRole.privileges.map((priv) => (
                         <div key={priv.code} onClick={() => rolePrivilegesClickHandler(priv)}>
                             <CustomBadge

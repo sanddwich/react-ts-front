@@ -1,0 +1,17 @@
+.PrivilegeForm {
+  padding: 0;
+
+  .PrivilegeForm__group {
+    padding-bottom: 10px;
+  }
+
+  .PrivilegeForm__buttonCont {
+    display: flex;
+    justify-content: right;
+    align-items: center;
+  }
+
+  .PrivilegeForm__muted {
+    color: #a52a2a !important;
+  }
+}
