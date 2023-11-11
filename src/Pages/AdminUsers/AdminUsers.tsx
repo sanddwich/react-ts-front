@@ -168,8 +168,17 @@ const AdminUsers = (props: AdminUsersProps) => {
             }
 
             if (res.status == 404) {
-                showError("Ошибка обращения API");
-                !!res.data.error && console.warn("Ошибка обращения API: ", res.data.error);
+                let message: string = "Ошибка обращения API";
+                if (!!res.data.error) {
+                    console.warn("Ошибка обращения API: ", res.data.error);
+
+                    try {
+                        message = message + ": " + res.data.error.response.data.message;
+                    } catch(e) {
+                        console.warn(e);
+                    }
+                }
+                showError(message);
             }
         }
 
