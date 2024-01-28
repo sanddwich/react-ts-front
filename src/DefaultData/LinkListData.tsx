@@ -10,6 +10,7 @@ import AdminUsers from "../Pages/AdminUsers/AdminUsers";
 import {Icon} from "../Components/Icon";
 import AdminAccessRoles from "../Pages/AdminAccessRoles/AdminAccessRoles";
 import AdminPrivilege from "../Pages/AdminPrivilege/AdminPrivilege";
+import TestPage2 from "../Pages/TestPage2/TestPage2";
 
 const adminNode = '/admin/'
 const superUserNode = '/superuser/'
@@ -94,6 +95,11 @@ const LinkListData: LinkListInterface = {
                 title: 'Тест',
                 url: 'test',
                 component: <TestPage/>
+            },
+            {
+                title: 'Тест2',
+                url: 'test2',
+                component: <TestPage2/>
             },
             {
                 title: 'Страница не найдена',
